@@ -29,15 +29,15 @@ public class Dashboard extends Thread {
         while (isAlive()) {
 
 
-            packet = new TelemetryPacket(false); //false means that the telemetry packet is not putting the default field
-            canvas = packet.fieldOverlay(); //give the value of the packet to canvas
-
-
-            canvas.drawImage("/dash/decode.webp", 0, 0, 144, 144, 0, 72, 72, false)
-                    .setRotation(-Math.toRadians(90))
-                    .setTranslation(-72, 72);
-            canvas.setFill("blue");
-            canvas.fillCircle(ChassisController.getDistanceInchesX(), ChassisController.getDistanceInchesY(), 5);
+//            packet = new TelemetryPacket(false); //false means that the telemetry packet is not putting the default field
+//            canvas = packet.fieldOverlay(); //give the value of the packet to canvas
+//
+//
+//            canvas.drawImage("/dash/decode.webp", 0, 0, 144, 144, 0, 72, 72, false)
+//                    .setRotation(-Math.toRadians(90))
+//                    .setTranslation(-72, 72);
+//            canvas.setFill("blue");
+//            canvas.fillCircle(ChassisController.getDistanceInchesX(), ChassisController.getDistanceInchesY(), 5);
 
             //TODO:checar que si imprima bien la cancha
 
