@@ -244,6 +244,7 @@ public class Camera extends LinearOpMode {
         // the values of xDistance and yDistance
         dashboardTelemetry.update();
         telemetry.update();
+
     }
 
 }
