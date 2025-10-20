@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.IMU;
 
 @Autonomous(name = "Blue_Down",group = "Robot Autos")
 
@@ -21,8 +23,15 @@ public class Blue_Auto_Down extends LinearOpMode {
         dashboard.start(); // start the dashboard in a thread
         ChassisController.resetEncoders(); // reset encoders
 
-
         while(opModeIsActive()) {
+            chassis.MecanumDriveAuto( 10, 10, 1, 0);
+            sleep(100);
+            chassis.MecanumDriveAuto( 10, 10, 1, 0);
+            sleep(100);
+            chassis.MecanumDriveAuto( 10, 10, 1, 0);
+            sleep(100);
+            chassis.MecanumDriveAuto( 10, 10, 1, 0);
+            break;
         }
 
     }
