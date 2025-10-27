@@ -43,6 +43,7 @@ public class Main extends OpMode {
     boolean dPadUp2, dPadDown2, dPadRight2, dPadLeft2;
     boolean A2,B2,Y2,X2;
 
+    //Subsytems subsytems;
 
     @Override
     public void init() {
@@ -52,9 +53,12 @@ public class Main extends OpMode {
     @Override
     public void loop() {
         chassis = new ChassisController(hardwareMap);
+        //subsytems = new Subsytems(hardwareMap);
         //Dashboard dashboard = new Dashboard();
         //dashboard.start();
-        ChassisController.MecanumDrive(LSx1,LSy1,RSx1);
+        if (RT1 != 0 ){
+            chassis.moveIntake(RT1);
+        }
     }
 }
 
