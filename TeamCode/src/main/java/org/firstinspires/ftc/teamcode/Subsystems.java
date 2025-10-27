@@ -14,7 +14,6 @@ public class Subsystems {
     public CRServo servoBearing2;
     public CRServo servoElevation;
     PID pid = new PID();
-
     public Subsystems (HardwareMap hardwareMap){
         intakeMotor = hardwareMap.get(DcMotor.class,"intakeMotor");
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
