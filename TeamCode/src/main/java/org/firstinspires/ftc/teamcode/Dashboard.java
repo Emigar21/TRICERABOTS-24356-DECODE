@@ -5,8 +5,6 @@ import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.openftc.easyopencv.OpenCvCamera;
 
 public class Dashboard {
     public static FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -21,12 +19,12 @@ public class Dashboard {
 //    static Canvas canvas = packet.fieldOverlay();
     //give the value of the packet to canvas
 
-    static Telemetry dashboardTelemetry = dashboard.getTelemetry();
+    Telemetry dashboardTelemetry = dashboard.getTelemetry();
     //initialize the telemetry
 
 
 
-    public static void RunDashboard(){
+    public void RunDashboard(){
         telemetry = new TelemetryPacket(false);
         //Import the image
         telemetry.fieldOverlay()

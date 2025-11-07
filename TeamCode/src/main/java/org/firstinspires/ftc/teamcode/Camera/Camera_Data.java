@@ -1,8 +1,7 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Camera;
 
-import static org.firstinspires.ftc.teamcode.Camera_Autonomous.cameraOrientation;
-import static org.firstinspires.ftc.teamcode.Camera_Autonomous.cameraPosition;
-
+import static org.firstinspires.ftc.teamcode.Camera.Camera_Autonomous.cameraOrientation;
+import static org.firstinspires.ftc.teamcode.Camera.Camera_Autonomous.cameraPosition;
 
 import android.util.Size;
 
@@ -11,35 +10,33 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 public class Camera_Data {
-    public  Camera_Stream processor = new Camera_Stream();
+    public Camera_Stream processor = new Camera_Stream();
     public AprilTagProcessor aprilTagProcessor;
-    static double x;
-    static double y;
-    static double z;
-    static double yaw;
-    static double pitch;
-    static double roll;
-    static double bearing;
-    static double range;
-    static double elevation;
-    static double id;
-    static boolean detection;
-
-    static boolean isDetecting;
-    //Array that will contain pose values obtained in CameraDetections
+    public static double x;
+    public static double y;
+    public static double z;
+    public static double yaw;
+    public static double pitch;
+    public static double roll;
+    public static double bearing;
+    public static double range;
+    public static double elevation;
+    public static double id;
+     public static boolean detection;
     public AprilTagDetection currentDetections;
-    static double[] detectionValues = {
+     public static double[] detectionValues = {
             id, x, y, z, yaw, pitch, roll, range, bearing, elevation};
 
     public Camera_Data(HardwareMap hardwareMap) {
         // We create the builder with our desired building for the AprilTag processor
         // and the VisionPortal
-        aprilTagProcessor = new AprilTagProcessor.Builder()
+         aprilTagProcessor = new AprilTagProcessor.Builder()
                 //Draw the axes at the Live view whenever it detect a AprilTag
                 .setDrawAxes(true)
                 //Set Camera´s position and orientation in the robot
@@ -58,7 +55,7 @@ public class Camera_Data {
                 //We assign the aprilTagProcessor and visionProcessor (Used for Stream)
                 .addProcessors(aprilTagProcessor,processor)
                 //that we gonna use
-                .setCameraResolution(new Size(1280, 720))
+                .setCameraResolution(new Size(640,480))
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .setLiveViewContainerId(R.id.cameraMonitorViewId)
                 .setAutoStartStreamOnBuild(true)
@@ -94,9 +91,4 @@ public class Camera_Data {
             detection = true;
         }
     }
-
-//    public boolean isDetecting(){
-//        detection.
-//    }
 }
-//All this is used for streaming what sees the camera in the Ftc Dashboard =)

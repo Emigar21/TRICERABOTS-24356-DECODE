@@ -1,25 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 
-
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvPipeline;
+import org.firstinspires.ftc.teamcode.RobotFunctions.ChassisController;
 
 @TeleOp(name="Main",group="Robot")
 public class Main extends OpMode {
@@ -43,22 +29,27 @@ public class Main extends OpMode {
     boolean dPadUp2, dPadDown2, dPadRight2, dPadLeft2;
     boolean A2,B2,Y2,X2;
 
-    //Subsytems subsytems;
+    Subsystems subsytems;
 
     @Override
     public void init() {
-
+        chassis.resetEncoders();
+        subsytems = new Subsystems(hardwareMap);
+//        chassis = new ChassisController(hardwareMap);
     }
 
     @Override
     public void loop() {
-        chassis = new ChassisController(hardwareMap);
-        //subsytems = new Subsytems(hardwareMap);
-        //Dashboard dashboard = new Dashboard();
-        //dashboard.start();
-        if (RT1 != 0 ){
-            chassis.moveIntake(RT1);
+        LSx1 = gamepad1.left_stick_x;
+        LSy1 = gamepad1.left_stick_y;
+        RSx1 = gamepad1.right_stick_x;
+        chassis.mecanumDrive(-LSx1,LSy1,-RSx1);
+        if (RT1 < 0 || LT1 < 0 ){
+            subsytems.moveIntake(RT1, -LT1);
         }
+
+
     }
+
 }
 
