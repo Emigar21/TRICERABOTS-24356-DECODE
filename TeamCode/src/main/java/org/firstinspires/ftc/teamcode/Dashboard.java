@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -9,43 +11,40 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Dashboard {
     public static FtcDashboard dashboard = FtcDashboard.getInstance();
     //initialize dashboard
+    static TelemetryPacket packet = new TelemetryPacket(false);
 
-    static TelemetryPacket telemetry;
+
 
     //false means that the telemetry packet is not putting the default field
 
-    private static final Canvas DEFAULT_FIELD = new Canvas();
-
-//    static Canvas canvas = packet.fieldOverlay();
-    //give the value of the packet to canvas
-
-    Telemetry dashboardTelemetry = dashboard.getTelemetry();
+    public static Telemetry dashboardTelemetry = dashboard.getTelemetry();
     //initialize the telemetry
 
 
 
-    public void RunDashboard(){
-        telemetry = new TelemetryPacket(false);
+    public static void initDashboard(){
         //Import the image
-        telemetry.fieldOverlay()
-                .drawImage("/dash/decode.webp",0,0,144,144);
-//                .setRotation(Math.toRadians(270))//In progress
-//                .setFill("blue")//Set color
-//                .fillCircle(actualXDistance,actualYDistance , 5)//Make circle.setTranslation(10, actualDistance);
-//                .setStroke("red")
-//                .strokeLine(actualXDistance,actualYDistance, setPointX, setPointY)
-//                .setStroke("green")
-//                .strokeLine(initialDistanceX, initialDistanceY, setPointX, setPointY);
-//        telemetry.put("Current Distance X", actualXDistance);
-//        telemetry.put("Current Distance Y", actualYDistance);
-//        telemetry.put("Current Angle", currentAngle);
-//        telemetry.put("Error X", XDistance);
-//        telemetry.put("Error Y", YDistance);
+        packet.fieldOverlay()
+                .drawImage("/images/decodefield.png",0,0,144,144)
+                .setRotation(-Math.toRadians(90))//In progress
+                .setTranslation(-72, 72); //new 0,0
+        dashboard.sendTelemetryPacket(packet);
 
+    }
 
+    public static void printline(double startX, double startY, double finalX, double finalY){
+        packet.fieldOverlay()
+                .setStroke("red")
+                .setStrokeWidth(1)
+                .strokeLine(startX,startY,finalX,finalY);
+        dashboard.sendTelemetryPacket(packet);
+    }
 
-//        dashboard.sendTelemetryPacket(telemetry);
-        //Send the packet to te ftc dashboard
-        //dashboard;
+    public static void moveCircle(double currentPosX, double currentPosY){
+        packet.fieldOverlay()
+                .setFill("green")
+                .fillCircle(currentPosX,currentPosY,5);
+        dashboard.sendTelemetryPacket(packet);
+
     }
 }

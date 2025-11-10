@@ -1,17 +1,22 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import static org.firstinspires.ftc.teamcode.Dashboard.dashboardTelemetry;
+
+
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotFunctions.ChassisController;
+import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems;
 
 @TeleOp(name="Main",group="Robot")
 public class Main extends OpMode {
 
     ChassisController chassis;
-    Telemetry dashboardTelemetry;
 
     // Controller Input
 
@@ -30,25 +35,34 @@ public class Main extends OpMode {
     boolean A2,B2,Y2,X2;
 
     Subsystems subsytems;
+    Dashboard dashboard;
 
     @Override
     public void init() {
+        //chassis.resetEncoders();
+        //subsytems = new Subsystems(hardwareMap);
+        chassis = new ChassisController(hardwareMap);
         chassis.resetEncoders();
-        subsytems = new Subsystems(hardwareMap);
-//        chassis = new ChassisController(hardwareMap);
+
     }
 
     @Override
     public void loop() {
-        LSx1 = gamepad1.left_stick_x;
-        LSy1 = gamepad1.left_stick_y;
-        RSx1 = gamepad1.right_stick_x;
-        chassis.mecanumDrive(-LSx1,LSy1,-RSx1);
-        if (RT1 < 0 || LT1 < 0 ){
-            subsytems.moveIntake(RT1, -LT1);
+        Dashboard.initDashboard();
+        Dashboard.packet.put("Current positionX",chassis.getDistanceInchesX());
+        Dashboard.packet.put("Current positionY", chassis.getDistanceInchesY());
+        Dashboard.moveCircle(chassis.getDistanceInchesX(),chassis.getDistanceInchesY());
+
+
+
+    }
+    public void waitFor(double seconds) {
+        ElapsedTime timer = new ElapsedTime();
+        timer.reset();
+
+        while (timer.seconds() < seconds) {
+            System.out.println("Hewo :)");
         }
-
-
     }
 
 }

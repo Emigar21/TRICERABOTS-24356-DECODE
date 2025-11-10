@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Dashboard;
 import org.firstinspires.ftc.teamcode.Variables.Constants;
 
 
@@ -17,29 +18,31 @@ public class ChassisController {
 
     //initialize motors
 
-    static DcMotorEx topLeft;
-    static DcMotorEx topRight;
-    static DcMotorEx rearLeft;
-    static DcMotorEx rearRight;
+     DcMotorEx topLeft;
+     DcMotorEx topRight;
+     DcMotorEx rearLeft;
+     DcMotorEx rearRight;
 
     //initialize encoders
 
-//    static DcMotorEx deadWheelX;
-//    static DcMotorEx deadWheelY;
+     DcMotorEx deadWheelX;
+     DcMotorEx deadWheelY;
 
     //initialize IMU
 
-    static IMU imu;
+     IMU imu;
 
     PID pid = new PID();
 
     //initialize variables
-    static double startPositionX = 0;
-    static double startPositionY = 0;
-    static double powerErrorX;
-    static double powerErrorY;
-    static double errorAxisX;
-    static double errorAxisY;
+    double startPositionX = 0;
+    double startPositionY = 0;
+    double powerErrorX;
+    double powerErrorY;
+    double errorAxisX;
+    double errorAxisY;
+
+    Dashboard dashboard;
 
 
     public ChassisController(HardwareMap hardwareMap) {
@@ -58,10 +61,14 @@ public class ChassisController {
 
         //set zero power behavior
 
-        topLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        topRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        topLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        topRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
         rearLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rearRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+
+        deadWheelX = topLeft;
+        deadWheelY = topRight;
+
 
         //Initialize IMU
 
@@ -75,34 +82,19 @@ public class ChassisController {
     }
 
     //functions that give the current position in ticks
-    public double getTicksY() {
-        return (double) (-topLeft.getCurrentPosition() + rearLeft.getCurrentPosition()) /2;
-    }
-
-    public double getTicksX() {
-        return topRight.getCurrentPosition();
-    }
+    public double getTicksX(){return -deadWheelX.getCurrentPosition();}
+    public double getTicksY() {return topRight.getCurrentPosition();}
 
     //functions that give the current revolutions
-    public double getRevsX() {
-        return getTicksX() / Constants.chassisConst.TICS_PER_REV;
-    }
-
-    public double getRevsY() {
-        return getTicksY() / Constants.chassisConst.TICS_PER_REV;
-    }
+    public double getRevsX() {return  getTicksX() / Constants.chassisConst.TICS_PER_REV;}
+    public double getRevsY (){return getTicksY() / Constants.chassisConst.TICS_PER_REV;}
 
     //functions that give the current distance in inches
-    public double getDistanceInchesX() {
-        return getRevsX() * Constants.chassisConst.WHEEL_CIRC_INCH + startPositionX;
-    }
-
-    public double getDistanceInchesY() {
-        return getRevsY() * Constants.chassisConst.WHEEL_CIRC_INCH + startPositionY;
-    }
+    public double getDistanceInchesX (){return getRevsX() * Constants.chassisConst.WHEEL_CIRC_INCH + startPositionX;}
+    public double getDistanceInchesY (){return getRevsY() * Constants.chassisConst.WHEEL_CIRC_INCH + startPositionY;}
 
     //function that reset encoders
-    public void resetEncoders() {
+    public  void resetEncoders() {
         topLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         topLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         topRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -167,6 +159,13 @@ public class ChassisController {
         topRight.setPower(power * (sin / max) - orientation); //set the power of the motors
         rearLeft.setPower(power * (sin / max) + orientation); //set the power of the motors
         rearRight.setPower(power * (cos / max) - orientation); //set the power of the motors
+    }
+
+    public void motorMove(double inch){
+        while (getDistanceInchesX() < inch) {
+            topLeft.setPower(1);
+        }
+        topLeft.setPower(0);
     }
 
     public void chassisFollow(){

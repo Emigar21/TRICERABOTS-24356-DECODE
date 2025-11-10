@@ -3,6 +3,9 @@ import static org.firstinspires.ftc.teamcode.Camera.Camera_Data.bearing;
 import static org.firstinspires.ftc.teamcode.Camera.Camera_Data.detection;
 import static org.firstinspires.ftc.teamcode.Camera.Camera_Data.id;
 
+import static org.firstinspires.ftc.teamcode.Dashboard.dashboard;
+import static org.firstinspires.ftc.teamcode.Dashboard.dashboardTelemetry;
+
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -14,10 +17,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.Dashboard;
 import org.opencv.core.Scalar;
 
-@Autonomous(name = "Camera_Testeito",group = "Robot Autos")
+@Autonomous(name = "Camera_Test",group = "Test")
 
 public class Camera_Autonomous extends LinearOpMode {
-    Dashboard dashboard = new Dashboard();
     // Set the position of the camera in the robot
     public static final Position cameraPosition = new Position(DistanceUnit.INCH,
             0, 0, 0, 0);
@@ -35,24 +37,18 @@ public class Camera_Autonomous extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //Initializing the telemetry(Dashboard from Camera_Stream) and the Camera Stream
-        telemetry = new MultipleTelemetry(telemetry);
+        telemetry = new MultipleTelemetry(telemetry, dashboardTelemetry);
 
 //        Subsytems subsytems = new Subsytems(hardwareMap);
         //ChassisController chassis = new ChassisController(hardwareMap);
         Camera_Data camera = new Camera_Data(hardwareMap);
 
-        telemetry.addLine("Field Established");
-
-        telemetry.addLine("Processors updated");
-        telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
-        telemetry.addData(">", "Touch START to start Autonomous");
-        telemetry.update();
 
         waitForStart();
 
         while (opModeIsActive()) {
-            dashboard.RunDashboard();
             camera.CameraDetection();
+            dashboard.sendImage(camera.processor.getLastFrame());
 //            chassis.chassisFollow();
 
             TelemetryUpdateCamera();
