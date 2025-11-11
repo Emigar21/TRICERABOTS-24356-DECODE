@@ -51,7 +51,7 @@ public class Main extends OpMode {
         Dashboard.initDashboard();
         Dashboard.packet.put("Current positionX",chassis.getDistanceInchesX());
         Dashboard.packet.put("Current positionY", chassis.getDistanceInchesY());
-        Dashboard.moveCircle(chassis.getDistanceInchesX(),chassis.getDistanceInchesY());
+        //Dashboard.moveCircle(chassis.getDistanceInchesX(),chassis.getDistanceInchesY());
 
 
 

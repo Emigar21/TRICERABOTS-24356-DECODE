@@ -9,9 +9,11 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Dashboard {
+
+
     public static FtcDashboard dashboard = FtcDashboard.getInstance();
     //initialize dashboard
-    static TelemetryPacket packet = new TelemetryPacket(false);
+    static TelemetryPacket packet;
 
 
 
@@ -23,6 +25,7 @@ public class Dashboard {
 
 
     public static void initDashboard(){
+        packet = new TelemetryPacket(false);
         //Import the image
         packet.fieldOverlay()
                 .drawImage("/images/decodefield.png",0,0,144,144)
@@ -45,6 +48,9 @@ public class Dashboard {
                 .setFill("green")
                 .fillCircle(currentPosX,currentPosY,5);
         dashboard.sendTelemetryPacket(packet);
+        //la embajadora:
+        //
+        // tecmilenio en decadencia jajalol, si tienen la oportunidad de estudiar en Tecmi desaprovechenla
 
     }
 }
