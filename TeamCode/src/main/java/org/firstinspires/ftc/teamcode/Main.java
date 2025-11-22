@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 
-import static org.firstinspires.ftc.teamcode.Dashboard.dashboardTelemetry;
-
+import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.bearing;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -11,6 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotFunctions.ChassisController;
+
 import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems;
 
 @TeleOp(name="Main",group="Robot")
@@ -24,7 +24,10 @@ public class Main extends OpMode {
     double LT1, RT1;
     double LSx1, LSy1, RSx1, RSy1;
     boolean LB1, RB1;
-    boolean A1,B1,Y1,X1;
+    public static boolean A1;
+    public static boolean B1;
+    static boolean Y1;
+    static boolean X1;
     boolean dPadUp1, dPadDown1, dPadRight1, dPadLeft1;
 
     // Gamepad 2
@@ -36,25 +39,42 @@ public class Main extends OpMode {
 
     Subsystems subsytems;
     Dashboard dashboard;
+    boolean isAlive = false;
 
     @Override
     public void init() {
-        //chassis.resetEncoders();
-        //subsytems = new Subsystems(hardwareMap);
         chassis = new ChassisController(hardwareMap);
-        chassis.resetEncoders();
+        //subsytems = new Subsystems(hardwareMap);
+        //chassis.resetEncoders();
 
     }
 
     @Override
     public void loop() {
-        Dashboard.initDashboard();
-        Dashboard.packet.put("Current positionX",chassis.getDistanceInchesX());
-        Dashboard.packet.put("Current positionY", chassis.getDistanceInchesY());
-        //Dashboard.moveCircle(chassis.getDistanceInchesX(),chassis.getDistanceInchesY());
+        updateControllerInput();
+        Dashboard.initDashboard(chassis.getDistanceInchesX(), chassis.getDistanceInchesY(),10,10);
+
+        if (A1) {
+            isAlive = true;
+        }
+        if (isAlive){
+            ChassisController.mecanumDrive(LSx1, -LSy1, bearing);
+        }  else if (Math.abs(bearing) <= 0.2) {
+            isAlive = false;
+        } else if (B1) {
+            isAlive = false;
+        } else {
+            ChassisController.mecanumDrive(LSx1, -LSy1, RSx1);
+        }
+        //TODO: probar la programacion en chassis con camara y verificar que funcione
 
 
-
+        if (RT1 != 0){
+            chassis.moveMotorIntake(RT1);
+        } else if (RB1) {
+            chassis.moveMotorIndexer(1);
+        }
+        //Dashboard.packet.put("color", chassis.getColor());
     }
     public void waitFor(double seconds) {
         ElapsedTime timer = new ElapsedTime();
@@ -64,6 +84,40 @@ public class Main extends OpMode {
             System.out.println("Hewo :)");
         }
     }
+    public void updateControllerInput(){
+        RT1 = gamepad1.right_trigger;
+        LT1 = gamepad1.left_trigger;
+        LSx1 = gamepad1.left_stick_x;
+        LSy1 = gamepad1.left_stick_y;
+        RSx1 = gamepad1.right_stick_x;
+        RSy1 = gamepad1.right_stick_y;
+        LB1 = gamepad1.left_bumper;
+        RB1 = gamepad1.right_bumper;
+        A1 = gamepad1.a;
+        B1 = gamepad1.b;
+        X1 = gamepad1.x;
+        Y1 = gamepad1.y;
+        dPadUp1 = gamepad1.dpad_up;
+        dPadRight1 = gamepad1.dpad_right;
+        dPadDown1 = gamepad1.dpad_down;
+        dPadLeft1 = gamepad1.dpad_left ;
 
+        RT2 = gamepad2.right_trigger;
+        LT2 = gamepad2.left_trigger;
+        LSx2 = gamepad2.left_stick_x;
+        LSy2 = -gamepad2.left_stick_y;
+        RSy2 = -gamepad2.right_stick_y;
+        LB2 = gamepad2.left_bumper;
+        RB2 = gamepad2.right_bumper;
+        RSx2 = gamepad2.right_stick_x;
+        dPadUp2 = gamepad2.dpad_up;
+        dPadDown2 = gamepad2.dpad_down;
+        dPadLeft2 = gamepad2.dpad_left;
+        dPadRight2 = gamepad2.dpad_right;
+        A2 = gamepad2.a;
+        B2 = gamepad2.b;
+        X2 = gamepad2.x;
+        Y2 = gamepad2.y;
+    }
 }
 

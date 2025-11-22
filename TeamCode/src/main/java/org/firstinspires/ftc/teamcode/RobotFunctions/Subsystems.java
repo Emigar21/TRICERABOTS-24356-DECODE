@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotFunctions;
 
-import static org.firstinspires.ftc.teamcode.Camera.Camera_Data.detection;
+import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.detection;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;

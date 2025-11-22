@@ -9,48 +9,35 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Dashboard {
-
-
-    public static FtcDashboard dashboard = FtcDashboard.getInstance();
+    public static FtcDashboard ftcDashboard = FtcDashboard.getInstance();
     //initialize dashboard
-    static TelemetryPacket packet;
+    public static TelemetryPacket packet;
 
 
 
     //false means that the telemetry packet is not putting the default field
 
-    public static Telemetry dashboardTelemetry = dashboard.getTelemetry();
-    //initialize the telemetry
+    public  Telemetry dashboardTelemetry = ftcDashboard.getTelemetry();
+    //initialize the  b bvncgnhfgfhj
+
+    public  Canvas canvas;
 
 
 
-    public static void initDashboard(){
+    public static void initDashboard(double xPosition, double yPosition, double xGoal, double yGoal){
         packet = new TelemetryPacket(false);
+
         //Import the image
         packet.fieldOverlay()
-                .drawImage("/images/decodefield.png",0,0,144,144)
-                .setRotation(-Math.toRadians(90))//In progress
-                .setTranslation(-72, 72); //new 0,0
-        dashboard.sendTelemetryPacket(packet);
-
-    }
-
-    public static void printline(double startX, double startY, double finalX, double finalY){
-        packet.fieldOverlay()
-                .setStroke("red")
-                .setStrokeWidth(1)
-                .strokeLine(startX,startY,finalX,finalY);
-        dashboard.sendTelemetryPacket(packet);
-    }
-
-    public static void moveCircle(double currentPosX, double currentPosY){
-        packet.fieldOverlay()
-                .setFill("green")
-                .fillCircle(currentPosX,currentPosY,5);
-        dashboard.sendTelemetryPacket(packet);
-        //la embajadora:
-        //
-        // tecmilenio en decadencia jajalol, si tienen la oportunidad de estudiar en Tecmi desaprovechenla
-
+                .drawImage("/images/field-2025-juice-black.png",0,0,144,144)
+                .setRotation(Math.toRadians(270))
+                .setTranslation(-72, 72)
+                .setStroke("green")
+                .setStrokeWidth(2)
+                .strokeLine(xPosition,yPosition,xGoal,yGoal)//new 0,0
+                .setFill("blue")
+                .fillCircle(xPosition, yPosition, 3);
+        //Send the packet to te ftc dashboard//In progress
+        ftcDashboard.sendTelemetryPacket(packet);
     }
 }
