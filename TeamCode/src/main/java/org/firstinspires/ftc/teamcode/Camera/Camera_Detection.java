@@ -21,7 +21,6 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.concurrent.atomic.AtomicReference;
-
 public class Camera_Detection{
     public Camera_Stream streamProcessor = new Camera_Stream();
     public AprilTagProcessor detectionProcessor;
