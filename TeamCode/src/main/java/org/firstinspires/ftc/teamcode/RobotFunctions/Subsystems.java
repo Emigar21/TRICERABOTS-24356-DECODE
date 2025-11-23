@@ -5,11 +5,12 @@ import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.detection;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class Subsystems {
     //public static DcMotor intakeMotor;
 
-    //public static CRServo servoBearing;
+    public static Servo servo;
     //public CRServo servoBearing2;
     //public CRServo servoElevation;
     PID pid = new PID();
@@ -18,7 +19,7 @@ public class Subsystems {
         //intakeMotor = hardwareMap.get(DcMotor.class,"intakeMotor");
         //intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        //servoBearing = hardwareMap.get(CRServo.class,"servoBearing");
+        servo = hardwareMap.get(Servo.class,"servo");
 //        servoBearing2 = hardwareMap.get(CRServo.class,"servoBearing2");
 //        servoElevation = hardwareMap.get(CRServo.class,"servoElevation");
 
@@ -37,4 +38,9 @@ public class Subsystems {
             //servoBearing.setPower(0);
         }
     }
+
+    public void moveFeeder (double x) {
+        servo.setPosition(x);
+    }
+
 }

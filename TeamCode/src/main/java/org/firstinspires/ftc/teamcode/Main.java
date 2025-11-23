@@ -18,6 +18,7 @@ public class Main extends OpMode {
 
     ChassisController chassis;
 
+
     // Controller Input
 
     // Gamepad 1
@@ -40,40 +41,60 @@ public class Main extends OpMode {
     Subsystems subsytems;
     Dashboard dashboard;
     boolean isAlive = false;
+    boolean timed0 = false;
+    boolean initTimer0 = false;
+
+    ElapsedTime timer0 = new ElapsedTime();
 
     @Override
     public void init() {
         chassis = new ChassisController(hardwareMap);
-        //subsytems = new Subsystems(hardwareMap);
+        subsytems = new Subsystems(hardwareMap);
         //chassis.resetEncoders();
+        timer0.reset();
 
     }
 
     @Override
     public void loop() {
         updateControllerInput();
-        Dashboard.initDashboard(chassis.getDistanceInchesX(), chassis.getDistanceInchesY(),10,10);
+       // Dashboard.initDashboard(chassis.getDistanceInchesX(), chassis.getDistanceInchesY(),10,10);
 
-        if (A1) {
-            isAlive = true;
-        }
-        if (isAlive){
-            ChassisController.mecanumDrive(LSx1, -LSy1, bearing);
-        }  else if (Math.abs(bearing) <= 0.2) {
-            isAlive = false;
-        } else if (B1) {
-            isAlive = false;
-        } else {
-            ChassisController.mecanumDrive(LSx1, -LSy1, RSx1);
-        }
+//        if (A1) {
+//            isAlive = true;
+//        }
+//        if (isAlive){
+//            ChassisController.mecanumDrive(LSx1, -LSy1, bearing);
+//        }  else if (Math.abs(bearing) <= 0.2) {
+//            isAlive = false;
+//        } else if (B1) {
+//            isAlive = false;
+//        } else {
+//            ChassisController.mecanumDrive(LSx1, -LSy1, RSx1);
+//        }
         //TODO: probar la programacion en chassis con camara y verificar que funcione
 
 
-        if (RT1 != 0){
-            chassis.moveMotorIntake(RT1);
-        } else if (RB1) {
-            chassis.moveMotorIndexer(1);
+
+        chassis.moveMotorIntake(A1 ? 1 : 0);
+        chassis.moveMotorIndexer(A1 ? 1 : 0);
+
+        if (B1 && !initTimer0) {
+            initTimer0 = true;
+            timer0.reset();
         }
+
+        if (B1) {
+            chassis.moveShooter(0.85);
+            if (timer0.seconds() > 2) {
+                subsytems.moveFeeder(1);
+            }
+        } else {
+            subsytems.moveFeeder (0);
+            chassis.moveShooter(0);
+            initTimer0 = false;
+        }
+
         //Dashboard.packet.put("color", chassis.getColor());
     }
     public void waitFor(double seconds) {

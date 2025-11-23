@@ -125,11 +125,11 @@ public class ChassisController {
     }
 
     //function that sets the power of the motors in 0
-    public static void stopMotors() {
-        topLeft.setPower(0.4);
-        topRight.setPower(0.4);
-        rearLeft.setPower(0.4);
-        rearRight.setPower(0.4);
+    public  void stopMotors() {
+        topLeft.setPower(0);
+        topRight.setPower(0);
+        rearLeft.setPower(0);
+        rearRight.setPower(0);
     }
 
     //function that move the robot to a specific position with coordinates of the field
@@ -195,18 +195,18 @@ public class ChassisController {
         if (detection) {
             mecanumDrive(0,0, -pid.calculateAngleChassisPID(0,bearing));
 
-        } else {
-            stopMotors();
-
         }
     }
 
     public void moveMotorIntake(double power){
-        topLeft.setPower(power);
+        topLeft.setPower(-power);
     }
 
     public void moveMotorIndexer(double power){
-        topRight.setPower(power);
+        topRight.setPower(-power);
+    }
+    public void moveShooter(double power){
+        rearRight.setPower(-power);
     }
     public float getColor(){
         final float[] hsvValues = new float[3];

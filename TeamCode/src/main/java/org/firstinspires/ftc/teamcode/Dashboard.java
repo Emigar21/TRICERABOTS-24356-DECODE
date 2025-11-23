@@ -18,7 +18,7 @@ public class Dashboard {
     //false means that the telemetry packet is not putting the default field
 
     public  Telemetry dashboardTelemetry = ftcDashboard.getTelemetry();
-    //initialize the  b bvncgnhfgfhj
+    //initialize the  dashboard
 
     public  Canvas canvas;
 
