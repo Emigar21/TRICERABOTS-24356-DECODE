@@ -8,27 +8,31 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Subsystems {
-    //public static DcMotor intakeMotor;
-
-    public static Servo servo;
-    //public CRServo servoBearing2;
+    DcMotor intakeMotor;
+    Servo feederServo;
+     DcMotor indexerMotor;
+     //DcMotor ShooterMotor;
     //public CRServo servoElevation;
-    PID pid = new PID();
 
     public Subsystems(HardwareMap hardwareMap){
-        //intakeMotor = hardwareMap.get(DcMotor.class,"intakeMotor");
-        //intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        servo = hardwareMap.get(Servo.class,"servo");
-//        servoBearing2 = hardwareMap.get(CRServo.class,"servoBearing2");
-//        servoElevation = hardwareMap.get(CRServo.class,"servoElevation");
+        intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
+        //ShooterMotor= hardwareMap.get(DcMotor.class, "shooterMotor");
+        indexerMotor= hardwareMap.get(DcMotor.class, "indexerMotor");
+
+        feederServo = hardwareMap.get(Servo.class,"feederServo");
+
 
     }
     //Function for moving the intake inwards and outwards
-    public void  moveIntake (double v, double rv){
-        //intakeMotor.setPower(v);
-        //intakeMotor.setPower(rv);
+    public void  moveIntake (double v){
+        intakeMotor.setPower(v);
     }
+    public void moveIndexer(double v){
+        indexerMotor.setPower(v);
+
+    }
+
     //Function which the servo will follow the april tag
     public void FollowServoAprilTag(double bearing) {
         if (detection) {
@@ -40,7 +44,7 @@ public class Subsystems {
     }
 
     public void moveFeeder (double x) {
-        servo.setPosition(x);
+        feederServo.setPosition(x);
     }
 
 }

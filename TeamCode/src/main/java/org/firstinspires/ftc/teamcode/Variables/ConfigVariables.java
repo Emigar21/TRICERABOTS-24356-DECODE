@@ -32,5 +32,8 @@ public class ConfigVariables {
 
     public static double kChassisD;
     public static double kChassisF;
+    public static double largedistancepower = 0;
+
+    public static double timeerShooter = 0 ;
 
 }

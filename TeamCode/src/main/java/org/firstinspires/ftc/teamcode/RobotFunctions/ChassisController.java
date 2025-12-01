@@ -197,28 +197,26 @@ public class ChassisController {
 
         }
     }
-
-    public void moveMotorIntake(double power){
-        topLeft.setPower(-power);
-    }
-
-    public void moveMotorIndexer(double power){
-        topRight.setPower(-power);
-    }
-    public void moveShooter(double power){
-        rearRight.setPower(-power);
-    }
     public float getColor(){
         final float[] hsvValues = new float[3];
         NormalizedRGBA colors = colorSensor.getNormalizedColors();
 
         Color.colorToHSV(colors.toColor(), hsvValues);
-        float hsv1 = hsvValues[0];
-        float hsv2 = hsvValues[1];
-        float hsv3 = hsvValues[2];
-        return hsv2 ;
+        float hsv1 = hsvValues[0]; //purple 210 - 240 green 120 - 180 - elegido
+        float hsv2 = hsvValues[1]; //purple 0.3 - 0.6 green 0.7 - 0.8
+        float hsv3 = hsvValues[2]; //descartado , el rango de valores es casi el mismo para ambos colores
+        return hsv1 ;
 
-        //falta calibrar con pelotas
-        //falta poner para dependiendo el valor sepamos el color
+    }
+
+    public String getArtifactorColor (){
+        if (getColor() >100 && getColor() < 200){
+            return "green";
+        } else if (getColor() > 200){
+            return "purple";
+        } else {
+            return "null";
+        }
+
     }
 }
