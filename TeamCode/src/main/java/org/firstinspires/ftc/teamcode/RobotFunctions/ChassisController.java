@@ -184,13 +184,6 @@ public class ChassisController {
         rearRight.setPower(power * (cos / max) - orientation); //set the power of the motors
     }
 
-    public void motorMove(double inch){
-        while (getDistanceInchesX() < inch) {
-            topLeft.setPower(1);
-        }
-        topLeft.setPower(0);
-    }
-
     public static void chassisFollow(){
         if (detection) {
             mecanumDrive(0,0, -pid.calculateAngleChassisPID(0,bearing));

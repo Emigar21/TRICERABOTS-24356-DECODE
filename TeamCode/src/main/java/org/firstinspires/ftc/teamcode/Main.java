@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.internal.camera.delegating.DelegatingCaptureSequence;
 import org.firstinspires.ftc.teamcode.RobotFunctions.ChassisController;
 
 import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems;
@@ -76,26 +77,32 @@ public class Main extends OpMode {
         //TODO: probar la programacion en chassis con camara y verificar que funcione
 
 
-subsytems.moveIntake(RB2 ? 1:0);
-subsytems.moveIndexer(LB2 ? 1:0);
-subsytems.moveFeeder(Y2 ? 1:0);
+        subsytems.moveIntake(RB2 ? 1:0);
+        subsytems.moveIndexer(LB2 ? 1:0);
+        subsytems.moveFeeder(Y2 ? 1:0);
 
 
-//        if (B1 && !initTimer0) {
-//            initTimer0 = true;
-//            timer0.reset();
-//        }
-//
-//        if (B1) {
-//            chassis.moveShooter(ConfigVariables.largedistancepower); //0.87
-//            if (timer0.seconds() > ConfigVariables.timeerShooter) {  //1.85s
-//                subsytems.moveFeeder(1);
-//            }
-//        } else {
-//            subsytems.moveFeeder (0);
-//            chassis.moveShooter(0);
-//            initTimer0 = false;
-//        }
+        if ((B1||A1) && !initTimer0) {
+            initTimer0 = true;
+            timer0.reset();
+        }
+
+        if (B1) {
+            subsytems.moveShooterLong(); //0.87
+            if (timer0.seconds() > ConfigVariables.timeerShooter) {  //1.85s
+                subsytems.moveFeeder(1);
+            }
+        } else if (A1){
+            subsytems.moveShooterLong(); //0.87
+            if (timer0.seconds() > ConfigVariables.timeerShooter) {  //1.85s
+                subsytems.moveFeeder(1);
+            }
+
+        } else{
+            subsytems.moveFeeder (0);
+            subsytems.shooterMotor.setPower(0);
+            initTimer0 = false;
+        }
 
         //Dashboard.packet.put("color", chassis.getColor());
     }
