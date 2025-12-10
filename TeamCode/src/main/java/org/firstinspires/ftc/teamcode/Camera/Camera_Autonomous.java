@@ -1,26 +1,21 @@
 package org.firstinspires.ftc.teamcode.Camera;
 
 
-import static org.firstinspires.ftc.teamcode.Dashboard.ftcDashboard;
+import static org.firstinspires.ftc.teamcode.RobotMode.Dashboard.ftcDashboard;
 
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 
+import org.firstinspires.ftc.teamcode.RobotMode.Dashboard;
 
-import org.firstinspires.ftc.teamcode.Camera.Camera_Detection;
-import org.firstinspires.ftc.teamcode.Camera.Camera_Stream;
-import org.firstinspires.ftc.teamcode.Dashboard;
-
-import org.firstinspires.ftc.teamcode.RobotFunctions.ChassisController;
-import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems;
+import org.firstinspires.ftc.teamcode.RobotFunctions.Chassis.ChassisController;
 import org.opencv.core.Scalar;
 
 @Autonomous(name = "Camera_Testeito",group = "Robot Autos")
 
 public class Camera_Autonomous extends LinearOpMode {
-    Subsystems subsystems;
+    Subsystems2 subsystems;
 
     Camera_Detection cameraDetection;
     ChassisController chassis;
@@ -35,7 +30,7 @@ public class Camera_Autonomous extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         dashboard = new Dashboard();
         cameraDetection = new Camera_Detection(hardwareMap);
-        subsystems = new Subsystems(hardwareMap);
+        subsystems = new Subsystems2(hardwareMap);
 //        chassis = new ChassisController(hardwareMap);
 //        chassis.resetEncoders();
 

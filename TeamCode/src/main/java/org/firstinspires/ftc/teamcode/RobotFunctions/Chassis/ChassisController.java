@@ -1,37 +1,27 @@
-package org.firstinspires.ftc.teamcode.RobotFunctions;
+package org.firstinspires.ftc.teamcode.RobotFunctions.Chassis;
 
 
-import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.bearing;
-import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.detection;
-
-import android.graphics.Color;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kChassisD;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kChassisF;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kChassisI;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kChassisP;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
-import com.qualcomm.robotcore.hardware.SwitchableLight;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Camera.Camera_Detection;
-import org.firstinspires.ftc.teamcode.Dashboard;
+import org.firstinspires.ftc.teamcode.ControlSystems.PID;
+import org.firstinspires.ftc.teamcode.RobotMode.Dashboard;
 import org.firstinspires.ftc.teamcode.Variables.Constants;
 
 
 @Config
 public class ChassisController {
-
-    double gain = 0;
-
-
-    NormalizedColorSensor colorSensor;
 
     //initialize motors
 
@@ -49,7 +39,9 @@ public class ChassisController {
 
     static IMU imu;
 
-    static PID pid = new PID();
+
+
+    PID pid = new PID();
 
     //initialize variables
     static double startPositionX = 0;
@@ -58,11 +50,8 @@ public class ChassisController {
     static double powerErrorY;
     static double errorAxisX;
     static double errorAxisY;
-    static double currentPosX = 0;
-    static double currentPosY = 0;
-
-    Dashboard dashboard;
-    Camera_Detection camera;
+    static double currentPositionX;
+    static double currentPositionY;
 
 
     public ChassisController(HardwareMap hardwareMap) {
@@ -89,9 +78,6 @@ public class ChassisController {
         deadWheelX = topLeft;
         deadWheelY = topRight;
 
-        colorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensor_color");
-
-
 
         //Initialize IMU
 
@@ -106,7 +92,7 @@ public class ChassisController {
 
     //functions that give the current position in ticks
     public double getTicksX(){return -deadWheelX.getCurrentPosition();}
-    public double getTicksY() {return topRight.getCurrentPosition();}
+    public double getTicksY() {return deadWheelY.getCurrentPosition();}
 
     //functions that give the current revolutions
     public double getRevsX() {return  getTicksX() / Constants.chassisConst.TICS_PER_REV;}
@@ -132,44 +118,8 @@ public class ChassisController {
         rearRight.setPower(0);
     }
 
-    //function that move the robot to a specific position with coordinates of the field
-    public static void mecanumDriveAuto(double X, double Y, double orientationSetpoint) {
 
-        errorAxisX = X - currentPosX; // error in the X axis that is always positive
-        errorAxisY = Y - currentPosY; // error in the Y axis that is always positive
-
-
-        double distance =  Math.sqrt(Math.pow((X - currentPosX),2) - Math.pow((Y - currentPosY),2));
-
-        double turn = pid.calculateAngleChassisPID(orientationSetpoint, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-        while (Math.abs(errorAxisX) > 0.4 || Math.abs(errorAxisY) > 0.4) { // while the error is greater than 0.05 is gonig to keep moving
-            //    if (Math.abs(imu.getRobotYawPitchRollAngles().getYaw()) > 10){
-            double xDistance = distance * Math.cos(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-            double yDistance = distance * Math.sin(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-            errorAxisY = Y - yDistance;
-            errorAxisX = X - xDistance;
-            //    } else {
-            //        errorAxisX = X - getDistanceInchesX();
-            //       errorAxisY = Y - getDistanceInchesY();
-            //    }
-            double power = pid.calculateChassisPID(Math.hypot(X, Y),Math.hypot(powerErrorX, powerErrorY));
-
-            turn = pid.calculateAngleChassisPID(orientationSetpoint, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-
-            double theta = Math.atan2(powerErrorY, powerErrorX); //create the angle of the robot that we want to move
-            double sin = Math.sin(theta - Math.PI / 4); //create the sin of the angle
-            double cos = Math.cos(theta - Math.PI / 4); //create the cos of the angle
-            double max = Math.max(Math.abs(sin), Math.abs(cos)); //create the max of the sin and the cos
-
-            topLeft.setPower(power * (cos / max) + turn); //set the power of the motors
-            topRight.setPower(power * (sin / max) - turn); //set the power of the motors
-            rearLeft.setPower(power * (sin / max) + turn); //set the power of the motors
-            rearRight.setPower(power * (cos / max) - turn); //set the power of the motors
-        }
-    }
-
-
-    public static void mecanumDrive(double X, double Y, double orientation) {
+    public void mecanumDrive(double X, double Y, double orientation) {
 
         double power = Math.hypot(X, Y);
         double theta = Math.atan2(Y, X); //create the angle of the robot that we want to move
@@ -184,32 +134,51 @@ public class ChassisController {
         rearRight.setPower(power * (cos / max) - orientation); //set the power of the motors
     }
 
-    public static void chassisFollow(){
-        if (detection) {
-            mecanumDrive(0,0, -pid.calculateAngleChassisPID(0,bearing));
 
+    public void mecanumDriveAuto(double X, double Y, double orientationSetpoint) {
+
+        errorAxisX = X - getDistanceInchesX(); // error in the X axis that is always positive
+        errorAxisY = Y - getDistanceInchesY(); // error in the Y axis that is always positive
+
+        double turn;
+
+        while (Math.abs(errorAxisX) > 0.4 || Math.abs(errorAxisY) > 0.4) { // while the error is greater than 0.05 is gonig to keep moving
+
+            //Calculate the distances your robot has moved with x placed odometry
+            double xDistanceVerticalOdometry = getDistanceInchesY()*Math.cos(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+            double yDistanceVerticalOdometry = getDistanceInchesY()*Math.sin(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+
+            //Calculate the distances your robot has moved with y placed odometry
+            double xDistanceHorizontalOdometry = getDistanceInchesX()*Math.cos(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+            double yDistanceHorizontalOdometry = getDistanceInchesX()*Math.sin(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+
+            //Get the x distance and y distance
+            double xDistancesSum = xDistanceHorizontalOdometry + xDistanceVerticalOdometry;
+            double yDistanceSum = yDistanceHorizontalOdometry + yDistanceVerticalOdometry;
+
+            //Gets the error of your distances
+            errorAxisY = Y - yDistanceSum;
+            errorAxisX = X - xDistancesSum;
+
+            //Accumulates the positions of the robot in field
+            currentPositionX += xDistancesSum;
+            currentPositionY += yDistanceSum;
+
+            double power = pid.calculatePIDF(Math.hypot(X, Y),Math.hypot(powerErrorX, powerErrorY), kChassisP, kChassisI,kChassisD,kChassisF);
+
+            turn = pid.calculateAngleChassisPID(orientationSetpoint, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES), kChassisP, kChassisI,kChassisD,kChassisF);
+
+            double theta = Math.atan2(powerErrorY, powerErrorX); //create the angle of the robot that we want to move
+            double sin = Math.sin(theta - Math.PI / 4); //create the sin of the angle
+            double cos = Math.cos(theta - Math.PI / 4); //create the cos of the angle
+            double max = Math.max(Math.abs(sin), Math.abs(cos)); //create the max of the sin and the cos
+
+            topLeft.setPower(power * (cos / max) + turn); //set the power of the motors
+            topRight.setPower(power * (sin / max) - turn); //set the power of the motors
+            rearLeft.setPower(power * (sin / max) + turn); //set the power of the motors
+            rearRight.setPower(power * (cos / max) - turn); //set the power of the motors
         }
-    }
-    public float getColor(){
-        final float[] hsvValues = new float[3];
-        NormalizedRGBA colors = colorSensor.getNormalizedColors();
-
-        Color.colorToHSV(colors.toColor(), hsvValues);
-        float hsv1 = hsvValues[0]; //purple 210 - 240 green 120 - 180 - elegido
-        float hsv2 = hsvValues[1]; //purple 0.3 - 0.6 green 0.7 - 0.8
-        float hsv3 = hsvValues[2]; //descartado , el rango de valores es casi el mismo para ambos colores
-        return hsv1 ;
-
-    }
-
-    public String getArtifactorColor (){
-        if (getColor() >100 && getColor() < 200){
-            return "green";
-        } else if (getColor() > 200){
-            return "purple";
-        } else {
-            return "null";
-        }
-
+        stopMotors();
+        resetEncoders();
     }
 }

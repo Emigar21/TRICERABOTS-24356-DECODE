@@ -1,24 +1,32 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.RobotMode.TELEOP;
 
+import static org.firstinspires.ftc.teamcode.RobotMode.Dashboard.ftcDashboard;
 
-import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.bearing;
-
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.teamcode.Camera.Camera_Detection;
+import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Feeder;
+import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Indexer;
+import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.RobotMode.Dashboard;
+import org.firstinspires.ftc.teamcode.RobotFunctions.Chassis.ChassisController;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.internal.camera.delegating.DelegatingCaptureSequence;
-import org.firstinspires.ftc.teamcode.RobotFunctions.ChassisController;
-
-import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems;
-import org.firstinspires.ftc.teamcode.Variables.ConfigVariables;
+import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Turret;
 
 @TeleOp(name="Main",group="Robot")
 public class Main extends OpMode {
 
     ChassisController chassis;
+    Camera_Detection cameraDetection;
+
+    Shooter shooter;
+
+    Turret turret;
+    Indexer indexer;
+    Intake intake;
+    Feeder feeder;
 
 
     // Controller Input
@@ -27,10 +35,7 @@ public class Main extends OpMode {
     double LT1, RT1;
     double LSx1, LSy1, RSx1, RSy1;
     boolean LB1, RB1;
-    public static boolean A1;
-    public static boolean B1;
-    static boolean Y1;
-    static boolean X1;
+    boolean A1, B1, Y1, X1;
     boolean dPadUp1, dPadDown1, dPadRight1, dPadLeft1;
 
     // Gamepad 2
@@ -40,7 +45,7 @@ public class Main extends OpMode {
     boolean dPadUp2, dPadDown2, dPadRight2, dPadLeft2;
     boolean A2,B2,Y2,X2;
 
-    Subsystems subsytems;
+
     Dashboard dashboard;
     boolean isAlive = false;
     boolean timed0 = false;
@@ -51,60 +56,51 @@ public class Main extends OpMode {
     @Override
     public void init() {
         chassis = new ChassisController(hardwareMap);
-        subsytems = new Subsystems(hardwareMap);
-        //chassis.resetEncoders();
-        timer0.reset();
+        cameraDetection = new Camera_Detection(hardwareMap);
 
+        turret = new Turret(hardwareMap);
+        shooter = new Shooter(hardwareMap);
+        indexer = new Indexer(hardwareMap);
+        intake = new Intake(hardwareMap);
+        feeder = new Feeder(hardwareMap);
+
+        timer0.reset();
     }
 
     @Override
     public void loop() {
+
         updateControllerInput();
-       // Dashboard.initDashboard(chassis.getDistanceInchesX(), chassis.getDistanceInchesY(),10,10);
 
-//        if (A1) {
-//            isAlive = true;
-//        }
-//        if (isAlive){
-//            ChassisController.mecanumDrive(LSx1, -LSy1, bearing);
-//        }  else if (Math.abs(bearing) <= 0.2) {
-//            isAlive = false;
-//        } else if (B1) {
-//            isAlive = false;
-//        } else {
-//            ChassisController.mecanumDrive(LSx1, -LSy1, RSx1);
-//        }
-        //TODO: probar la programacion en chassis con camara y verificar que funcione
+        Dashboard.initDashboard(chassis.getDistanceInchesX(), chassis.getDistanceInchesY(),10,10);
+
+        cameraDetection.CameraDetection();
+        ftcDashboard.sendImage(cameraDetection.streamProcessor.getLastFrame());
+
+        intake.moveIntake(RB2 ? 1:0);
+        indexer.moveIndexer(LB2 ? 1:0);
+
+        turret.turretServo.setPower(RSx1);
 
 
-        subsytems.moveIntake(RB2 ? 1:0);
-        subsytems.moveIndexer(LB2 ? 1:0);
-        subsytems.moveFeeder(Y2 ? 1:0);
 
 
-        if ((B1||A1) && !initTimer0) {
-            initTimer0 = true;
-            timer0.reset();
+        if (B1){
+            shooter.shooterShoot(Camera_Detection.range);
+        } else {
+            shooter.shooterMotor.setPower(0);
         }
 
-        if (B1) {
-            subsytems.moveShooterLong(); //0.87
-            if (timer0.seconds() > ConfigVariables.timeerShooter) {  //1.85s
-                subsytems.moveFeeder(1);
-            }
-        } else if (A1){
-            subsytems.moveShooterLong(); //0.87
-            if (timer0.seconds() > ConfigVariables.timeerShooter) {  //1.85s
-                subsytems.moveFeeder(1);
-            }
 
-        } else{
-            subsytems.moveFeeder (0);
-            subsytems.shooterMotor.setPower(0);
-            initTimer0 = false;
-        }
+        chassis.mecanumDrive(LSx2,LSy2,RSx2 );
 
-        //Dashboard.packet.put("color", chassis.getColor());
+        //turret.moveTurret(RSx2, Camera_Detection.bearing);
+
+
+
+        telemetry.addData("Range ", Camera_Detection.range);
+        telemetry.addData("MotorPower", shooter.shooterMotor.getPower());
+        telemetry.update();
     }
     public void waitFor(double seconds) {
         ElapsedTime timer = new ElapsedTime();

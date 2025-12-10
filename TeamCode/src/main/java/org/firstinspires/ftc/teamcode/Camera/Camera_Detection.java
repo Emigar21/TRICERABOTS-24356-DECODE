@@ -31,7 +31,7 @@ public class Camera_Detection{
     public double pitch;
     public double roll;
     public static double bearing;
-    public double range;
+    public static double range;
     public double elevation;
     public double id;
     public static boolean detection;

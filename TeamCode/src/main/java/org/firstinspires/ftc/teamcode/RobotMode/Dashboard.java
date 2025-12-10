@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.RobotMode;
 
 
 
@@ -10,13 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Dashboard {
     public static FtcDashboard ftcDashboard = FtcDashboard.getInstance();
-    //initialize dashboard
     public static TelemetryPacket packet;
-
-
-
-    //false means that the telemetry packet is not putting the default field
-
     public  Telemetry dashboardTelemetry = ftcDashboard.getTelemetry();
     //initialize the  dashboard
 
@@ -29,7 +23,7 @@ public class Dashboard {
 
         //Import the image
         packet.fieldOverlay()
-                .drawImage("/images/field-2025-juice-black.png",0,0,144,144)
+                .drawImage("/images/decodefield.png",0,0,144,144)
                 .setRotation(Math.toRadians(270))
                 .setTranslation(-72, 72)
                 .setStroke("green")
