@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.RobotFunctions.Chassis;
 
 
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kAngleChassisD;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kAngleChassisF;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kAngleChassisI;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kAngleChassisP;
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kChassisD;
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kChassisF;
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kChassisI;
@@ -52,6 +56,12 @@ public class ChassisController {
     static double errorAxisY;
     static double currentPositionX;
     static double currentPositionY;
+
+    static double currentCircleX;
+    static double currentCircleY;
+    double yDistanceSum;
+    double xDistancesSum;
+
 
 
     public ChassisController(HardwareMap hardwareMap) {
@@ -153,20 +163,20 @@ public class ChassisController {
             double yDistanceHorizontalOdometry = getDistanceInchesX()*Math.sin(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
 
             //Get the x distance and y distance
-            double xDistancesSum = xDistanceHorizontalOdometry + xDistanceVerticalOdometry;
-            double yDistanceSum = yDistanceHorizontalOdometry + yDistanceVerticalOdometry;
+            xDistancesSum = xDistanceHorizontalOdometry + xDistanceVerticalOdometry;
+            yDistanceSum = yDistanceHorizontalOdometry + yDistanceVerticalOdometry;
+
+
+            currentCircleX = currentPositionX + xDistancesSum;
+            currentCircleY = currentPositionY + yDistanceSum;
 
             //Gets the error of your distances
             errorAxisY = Y - yDistanceSum;
             errorAxisX = X - xDistancesSum;
 
-            //Accumulates the positions of the robot in field
-            currentPositionX += xDistancesSum;
-            currentPositionY += yDistanceSum;
-
             double power = pid.calculatePIDF(Math.hypot(X, Y),Math.hypot(powerErrorX, powerErrorY), kChassisP, kChassisI,kChassisD,kChassisF);
 
-            turn = pid.calculateAngleChassisPID(orientationSetpoint, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES), kChassisP, kChassisI,kChassisD,kChassisF);
+            turn = pid.calculateAngleChassisPID(orientationSetpoint, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES), kAngleChassisP, kAngleChassisI,kAngleChassisD,kAngleChassisF);
 
             double theta = Math.atan2(powerErrorY, powerErrorX); //create the angle of the robot that we want to move
             double sin = Math.sin(theta - Math.PI / 4); //create the sin of the angle
@@ -178,6 +188,10 @@ public class ChassisController {
             rearLeft.setPower(power * (sin / max) + turn); //set the power of the motors
             rearRight.setPower(power * (cos / max) - turn); //set the power of the motors
         }
+        //Accumulates the positions of the robot in field
+        currentPositionX += xDistancesSum;
+        currentPositionY += yDistanceSum;
+
         stopMotors();
         resetEncoders();
     }
