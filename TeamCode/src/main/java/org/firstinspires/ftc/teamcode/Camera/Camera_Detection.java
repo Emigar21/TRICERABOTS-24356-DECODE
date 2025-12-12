@@ -36,6 +36,10 @@ public class Camera_Detection{
     public double id;
     public static boolean detection;
 
+    public static String artifactPos1;
+    public static String artifactPos2;
+    public static String artifactPos3;
+
     private final AtomicReference<Bitmap> lastFrame = new AtomicReference<>
             (Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565));
 
@@ -101,6 +105,22 @@ public class Camera_Detection{
                 elevation = detection.ftcPose.elevation;
             }
             detection = true;
+        }
+    }
+
+    public void getObelisk(){
+        if (id == 21){
+            artifactPos1 = "green";
+            artifactPos2 = "purple";
+            artifactPos3 = "purple";
+        } else if (id == 22) {
+            artifactPos1 = "purple";
+            artifactPos2 = "green";
+            artifactPos3 = "purple";
+        } else if (id == 23) {
+            artifactPos1 = "purple";
+            artifactPos2 = "purple";
+            artifactPos3 = "green";
         }
     }
 }
