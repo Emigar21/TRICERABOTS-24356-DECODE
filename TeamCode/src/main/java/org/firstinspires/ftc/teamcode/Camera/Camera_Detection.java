@@ -68,7 +68,7 @@ public class Camera_Detection{
                 //We assign the aprilTagProcessor and visionProcessor (Used for Stream)
                 .addProcessors(detectionProcessor, streamProcessor)
                 //that we gonna use
-                .setCameraResolution(new Size(640,480))
+                .setCameraResolution(new Size(1280,720))
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .setLiveViewContainerId(R.id.cameraMonitorViewId)
                 .setAutoStartStreamOnBuild(true)

@@ -23,10 +23,10 @@ public class Shooter {
 
 
     public void shooterShoot(double distance){
-        double power = 0.55 + (distance - 63) * ((.807 - .55)/(300 - 63));
-        // formula: velmin + (actdist - mindistance) * ((maxvel - minvel) / (distmax - distmin))
-        //300 cm a .807
-        //63cm a .55
+        double power = 0.61 + (distance - 37) * ((.824 - .61)/(150 - 37));
+        // formula: velmin + (actdist - min_distance) * ((maxvel - minvel) / (distmax - distmin))
+        //150 cm a .824
+        //37cm a .61
         shooterMotor.setPower(compensateVoltage(power));
     }
 

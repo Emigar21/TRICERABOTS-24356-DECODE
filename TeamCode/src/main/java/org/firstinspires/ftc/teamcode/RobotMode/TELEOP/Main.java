@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.RobotMode.TELEOP;
 
+import static org.firstinspires.ftc.teamcode.ControlSystems.VoltageCompensator.compensateVoltage;
 import static org.firstinspires.ftc.teamcode.RobotMode.Dashboard.ftcDashboard;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.power;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Camera.Camera_Detection;
+import org.firstinspires.ftc.teamcode.ControlSystems.VoltageCompensator;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Indexer;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Intake;
@@ -26,7 +29,9 @@ public class Main extends OpMode {
     Turret turret;
     Indexer indexer;
     Intake intake;
-    Feeder feeder;
+
+    VoltageCompensator voltageCompensator;
+    //Feeder feeder;
 
 
     // Controller Input
@@ -58,11 +63,13 @@ public class Main extends OpMode {
         chassis = new ChassisController(hardwareMap);
         cameraDetection = new Camera_Detection(hardwareMap);
 
+        voltageCompensator = new VoltageCompensator(hardwareMap);
+
         turret = new Turret(hardwareMap);
         shooter = new Shooter(hardwareMap);
         indexer = new Indexer(hardwareMap);
         intake = new Intake(hardwareMap);
-        feeder = new Feeder(hardwareMap);
+        //feeder = new Feeder(hardwareMap);
 
         timer0.reset();
     }
@@ -87,12 +94,13 @@ public class Main extends OpMode {
 
         if (B1){
             shooter.shooterShoot(Camera_Detection.range);
+
         } else {
             shooter.shooterMotor.setPower(0);
         }
 
 
-        chassis.mecanumDrive(LSx2,LSy2,RSx2 );
+        //chassis.mecanumDrive(LSx2,LSy2,RSx2 );
 
         //turret.moveTurret(RSx2, Camera_Detection.bearing);
 
@@ -100,6 +108,7 @@ public class Main extends OpMode {
 
         telemetry.addData("Range ", Camera_Detection.range);
         telemetry.addData("MotorPower", shooter.shooterMotor.getPower());
+        telemetry.addData("Bearing", Camera_Detection.bearing);
         telemetry.update();
     }
     public void waitFor(double seconds) {

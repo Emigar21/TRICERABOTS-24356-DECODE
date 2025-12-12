@@ -25,15 +25,16 @@ public class Turret {
         turretServo.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
-
-    //TODO: change for servo, we use motor for Rawrbotics robot for practice
-
     public void moveTurret(double power, double angle){
         if(!detection){
             turretServo.setPower(power);
         }else {
             turretServo.setPower(pid.calculatePIDF(0,angle, kTurretP,kTurretI,kTurretD,kTurretF));
         }
+
+        int channel = turretServo.getPortNumber();
+
+        turretServo.getController().getServoPosition(channel);
     }
 
 }
