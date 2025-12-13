@@ -7,6 +7,8 @@ import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.power;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Camera.Camera_Detection;
 import org.firstinspires.ftc.teamcode.ControlSystems.VoltageCompensator;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Feeder;
@@ -90,9 +92,6 @@ public class Main extends OpMode {
         //turret.turretServo.setPower(RSx1);
 
 
-//.851
-
-
         if (B1){
             shooter.shooterMotor.setPower(compensateVoltage(power));
         } else {
@@ -118,6 +117,8 @@ public class Main extends OpMode {
         telemetry.addData("Range ", Camera_Detection.range);
         telemetry.addData("MotorPower", shooter.shooterMotor.getPower());
         telemetry.addData("Bearing", Camera_Detection.bearing);
+
+        telemetry.addData("motorvelocity", shooter.shooterMotor.getVelocity(AngleUnit.DEGREES));
         telemetry.update();
     }
     public void waitFor(double seconds) {
