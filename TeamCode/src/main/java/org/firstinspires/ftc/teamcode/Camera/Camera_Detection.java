@@ -108,19 +108,24 @@ public class Camera_Detection{
         }
     }
 
+
+    public static String[] artifactsObelisk = new String[3];
+
+
+
     public void getObelisk(){
         if (id == 21){
-            artifactPos1 = "green";
-            artifactPos2 = "purple";
-            artifactPos3 = "purple";
+            artifactsObelisk[0] = "green";
+            artifactsObelisk[1] = "purple";
+            artifactsObelisk[2] = "purple";
         } else if (id == 22) {
-            artifactPos1 = "purple";
-            artifactPos2 = "green";
-            artifactPos3 = "purple";
+            artifactsObelisk[0] = "purple";
+            artifactsObelisk[1] = "green";
+            artifactsObelisk[2] = "purple";
         } else if (id == 23) {
-            artifactPos1 = "purple";
-            artifactPos2 = "purple";
-            artifactPos3 = "green";
+            artifactsObelisk[0] = "purple";
+            artifactsObelisk[1] = "purple";
+            artifactsObelisk[2] = "green";
         }
     }
 }

@@ -7,14 +7,14 @@ import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 public class Sensors {
-    NormalizedColorSensor colorSensor;
+    public static NormalizedColorSensor colorSensor;
 
     public Sensors (HardwareMap hardwareMap){
         colorSensor = hardwareMap.get(NormalizedColorSensor.class,"colorSensor");
     }
 
 
-    public float getColor(){
+    public static float getColor(){
         final float[] hsvValues = new float[3];
         NormalizedRGBA colors = colorSensor.getNormalizedColors();
 
@@ -26,7 +26,7 @@ public class Sensors {
 
     }
 
-    public String getArtifactColor (){
+    public static String getArtifactColor (){
         if (getColor() >100 && getColor() < 200){
             return "green";
         } else if (getColor() > 200){

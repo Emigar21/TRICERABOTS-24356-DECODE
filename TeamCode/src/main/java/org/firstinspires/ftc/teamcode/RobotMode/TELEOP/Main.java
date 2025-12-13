@@ -65,7 +65,7 @@ public class Main extends OpMode {
 
         voltageCompensator = new VoltageCompensator(hardwareMap);
 
-        turret = new Turret(hardwareMap);
+        //turret = new Turret(hardwareMap);
         shooter = new Shooter(hardwareMap);
         indexer = new Indexer(hardwareMap);
         intake = new Intake(hardwareMap);
@@ -87,16 +87,25 @@ public class Main extends OpMode {
         intake.moveIntake(RB2 ? 1:0);
         indexer.moveIndexer(LB2 ? 1:0);
 
-        turret.turretServo.setPower(RSx1);
+        //turret.turretServo.setPower(RSx1);
 
 
+//.851
 
 
         if (B1){
-            shooter.shooterShoot(Camera_Detection.range);
-
+            shooter.shooterMotor.setPower(compensateVoltage(power));
         } else {
             shooter.shooterMotor.setPower(0);
+        }
+
+        if (A1){
+            intake.moveIntake(1);
+        } else if (X1) {
+            indexer.moveIndexer(1);
+        } else {
+            intake.moveIntake(0);
+            indexer.moveIndexer(0);
         }
 
 

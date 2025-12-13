@@ -1,17 +1,29 @@
 package org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.artifactPos1;
+import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.artifactsObelisk;
 import static org.firstinspires.ftc.teamcode.ControlSystems.VoltageCompensator.compensateVoltage;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.power;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.ControlSystems.VoltageCompensator;
+import org.firstinspires.ftc.teamcode.RobotFunctions.Sensors;
+
+import java.util.Objects;
 
 public class Shooter {
     public DcMotorEx shooterMotor;
+
+    ElapsedTime timer = new ElapsedTime();
+
+    public static int actualArtifact = 0;
 
 
     public Shooter (HardwareMap hardwareMap){
@@ -22,12 +34,42 @@ public class Shooter {
     }
 
 
-    public void shooterShoot(double distance){
-        double power = 0.61 + (distance - 37) * ((.824 - .61)/(150 - 37));
+    public double shooterPower(double distance){
+        return compensateVoltage(0.5409 + (distance - 34.9) * ((.7889 - .5409) / (175.76 - 34.9)));
         // formula: velmin + (actdist - min_distance) * ((maxvel - minvel) / (distmax - distmin))
-        //150 cm a .824
-        //37cm a .61
-        shooterMotor.setPower(compensateVoltage(power));
+        //175.76 cm a .7889
+        //34.9 cm a .5409
     }
 
+    public void categorizeColor(String actualColor, double cameraDistance) {
+
+        if (Objects.equals(actualColor, artifactsObelisk[actualArtifact])) {
+            timer.reset();
+            while(timer.seconds() < 5){
+                shooterMotor.setPower(shooterPower(cameraDistance));
+            }
+
+            stopMotors();
+            if (actualArtifact == 2){
+                actualArtifact = 0;
+            } else{
+                actualArtifact++;
+            }
+
+        } else if (Sensors.getArtifactColor() != "null" ){
+            timer.reset();
+            while(timer.seconds() < 5) {
+                shooterMotor.setPower(.3);
+            }
+            stopMotors();
+
+        } else {
+            stopMotors();
+        }
+
+
+    }
+    public void stopMotors(){
+        shooterMotor.setPower(0);
+    }
 }
