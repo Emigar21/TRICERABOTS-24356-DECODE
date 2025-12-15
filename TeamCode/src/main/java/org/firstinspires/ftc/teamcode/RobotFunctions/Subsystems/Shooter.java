@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.artifactPos1;
 import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.artifactsObelisk;
 import static org.firstinspires.ftc.teamcode.ControlSystems.VoltageCompensator.compensateVoltage;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kD;
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kF;
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kI;
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kP;
@@ -29,16 +30,14 @@ import java.security.KeyFactory;
 import java.util.Objects;
 
 public class Shooter {
-    public DcMotorEx shooterMotor;
+    public static DcMotorEx shooterMotor;
 
     ElapsedTime timer = new ElapsedTime();
 
     public static int actualArtifact = 0;
 
-    public static double actualVel;
 
-
-    public Shooter (HardwareMap hardwareMap){
+    public Shooter(HardwareMap hardwareMap) {
         shooterMotor = hardwareMap.get(DcMotorEx.class, "shooterMotor");
 
         shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -46,17 +45,27 @@ public class Shooter {
     }
 
 
-    public double shooterPower(double distance){
+    public double shooterPower(double distance) {
         return compensateVoltage(minVel + (distance - minDist) * ((maxVel - minVel) / (maxDist - minDist)));
         // formula: velmin + (actdist - min_distance) * ((maxvel - minvel) / (distmax - distmin))
         //175.76 cm a .7889
         //34.9 cm a .5409
     }
 
-    public void shootArtifact(double distance){
-        actualVel = ((shooterMotor.getVelocity()/HDHEX_TICKS_PER_REV) * 60)/6000;
-        PID pid = new PID();
-        shooterMotor.setPower(pid.calculatePIDF(shooterPower(distance),shooterMotor.getPower(),1,0,0, 0.986));
+    public double getDesiredRevs(){
+        return (3200 + (power - .67)*((5150 - 3200)/(.915-.67)));
+    }
+
+    public void shootArtifact(double distance) {
+        //actualVel = ((shooterMotor.getVelocity()/HDHEX_TICKS_PER_REV) * 60)/6000;
+        shooterMotor.setPower(compensateVoltage(power));
+    }
+
+
+
+
+    public  double getActualVel(){
+        return (shooterMotor.getVelocity()/HDHEX_TICKS_PER_REV) * 60;
     }
 
     public void categorizeColor(String actualColor, double cameraDistance) {
@@ -64,7 +73,7 @@ public class Shooter {
         if (Objects.equals(actualColor, artifactsObelisk[actualArtifact])) {
             timer.reset();
             while(timer.seconds() < 5){
-                shooterMotor.setPower(shooterPower(cameraDistance));
+                shooterMotor.setPower(0.8);
             }
 
             stopMotors();
@@ -77,7 +86,7 @@ public class Shooter {
         } else if (Sensors.getArtifactColor() != "null" ){
             timer.reset();
             while(timer.seconds() < 5) {
-                shooterMotor.setPower(.3);
+                shooterMotor.setPower(.4);
             }
             stopMotors();
 

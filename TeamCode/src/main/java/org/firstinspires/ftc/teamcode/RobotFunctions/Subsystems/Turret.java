@@ -16,11 +16,11 @@ import org.firstinspires.ftc.teamcode.ControlSystems.PID;
 
 
 public class Turret {
-    public CRServo turretServo;
+    public DcMotorEx turretServo;
     PID pid = new PID();
 
     public Turret (HardwareMap hardwareMap){
-        turretServo = hardwareMap.get(CRServo.class,"turretServo");
+        turretServo = hardwareMap.get(DcMotorEx.class,"turretServo");
 
         turretServo.setDirection(DcMotorSimple.Direction.FORWARD);
     }
@@ -31,10 +31,10 @@ public class Turret {
         }else {
             turretServo.setPower(pid.calculatePIDF(0,angle, kTurretP,kTurretI,kTurretD,kTurretF));
         }
+    }
 
-        int channel = turretServo.getPortNumber();
-
-        turretServo.getController().getServoPosition(channel);
+    public void moveServo(double power){
+        turretServo.setPower(power);
     }
 
 }

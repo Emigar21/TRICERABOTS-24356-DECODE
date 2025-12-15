@@ -3,7 +3,8 @@ package org.firstinspires.ftc.teamcode.RobotMode;
 
 
 import static org.firstinspires.ftc.teamcode.ControlSystems.PID.error;
-import static org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter.actualVel;
+import static org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter.shooterMotor;
+
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;
@@ -14,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Dashboard {
     public static FtcDashboard ftcDashboard = FtcDashboard.getInstance();
     public static TelemetryPacket packet;
-    public  Telemetry dashboardTelemetry = ftcDashboard.getTelemetry();
+    public static Telemetry dashboardTelemetry = ftcDashboard.getTelemetry();
     //initialize the  dashboard
 
     public  Canvas canvas;
@@ -35,13 +36,7 @@ public class Dashboard {
                 .setFill("blue")
                 .fillCircle(xPosition, yPosition, 3);
         //Send the packet to te ftc dashboard//In progress
-
         ftcDashboard.sendTelemetryPacket(packet);
     }
 
-
-    public static void sendTelemetry (){
-        packet.put("PIDF Error", error);
-        packet.put("Shooter Velocity", actualVel);
-    }
 }

@@ -37,7 +37,6 @@ public class auto extends LinearOpMode {
         chassisController = new ChassisController(hardwareMap);
 
         VoltageCompensator voltageCompensator = new VoltageCompensator(hardwareMap);
-        chassisController.resetEncoders();
 
 
         while(opModeInInit()){
@@ -60,18 +59,14 @@ public class auto extends LinearOpMode {
             ftcDashboard.sendImage(cameraDetection.streamProcessor.getLastFrame());
             telemetry.addData("actual artifact", actualArtifact);
             telemetry.addData("Motor Actual Power", shooter.shooterMotor.getPower());
-            telemetry.addData("ticks", deadWheelY.getCurrentPosition());
-            telemetry.addData("ticksmotor", topLeft.getCurrentPosition());
+            telemetry.addData("range", Camera_Detection.range);
+
             updateTelemetry(telemetry);
             cameraDetection.CameraDetection();
 
-            //shooter.categorizeColor(sensors.getArtifactColor(),Camera_Detection.range);
-
-
-            chassisController.mecanumDriveAuto(0, TILE_LENGHT);
-
+            shooter.categorizeColor(sensors.getArtifactColor(),Camera_Detection.range);
 
         }
-        //shooter.stopMotors();
+        shooter.stopMotors();
     }
 }

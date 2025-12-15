@@ -1,11 +1,17 @@
 package org.firstinspires.ftc.teamcode.RobotMode.TELEOP;
 
 import static org.firstinspires.ftc.teamcode.ControlSystems.VoltageCompensator.compensateVoltage;
+import static org.firstinspires.ftc.teamcode.RobotMode.Dashboard.dashboardTelemetry;
 import static org.firstinspires.ftc.teamcode.RobotMode.Dashboard.ftcDashboard;
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.power;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.revs;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.timer;
+import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.HDHEX_TICKS_PER_REV;
 
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -31,6 +37,7 @@ public class Main extends OpMode {
     Turret turret;
     Indexer indexer;
     Intake intake;
+    CRServo servo;
 
     VoltageCompensator voltageCompensator;
     //Feeder feeder;
@@ -59,11 +66,13 @@ public class Main extends OpMode {
     boolean initTimer0 = false;
 
     ElapsedTime timer0 = new ElapsedTime();
+    double velocity;
 
     @Override
     public void init() {
         chassis = new ChassisController(hardwareMap);
         cameraDetection = new Camera_Detection(hardwareMap);
+        servo = hardwareMap.get(CRServo.class, "servo");
 
         voltageCompensator = new VoltageCompensator(hardwareMap);
 
@@ -71,6 +80,7 @@ public class Main extends OpMode {
         shooter = new Shooter(hardwareMap);
         indexer = new Indexer(hardwareMap);
         intake = new Intake(hardwareMap);
+        telemetry = new MultipleTelemetry(telemetry,dashboardTelemetry);
         //feeder = new Feeder(hardwareMap);
 
         timer0.reset();
@@ -85,6 +95,7 @@ public class Main extends OpMode {
 //                LSy1 > .1 || LSy1 < -.1 ? LSy1 : 0,
 //                RSx1 > .1 || RSx1 < -.1 ? RSx1 : 0
 //        );
+
         Dashboard.initDashboard(chassis.getDistanceInchesX(), chassis.getDistanceInchesY(),10,10);
 
         cameraDetection.CameraDetection();
@@ -92,53 +103,48 @@ public class Main extends OpMode {
 
         //turret.turretServo.setPower(RSx1);
 
-
-        if (B1){
-            shooter.shooterMotor.setPower(compensateVoltage(power));
-        } else {
-            shooter.shooterMotor.setPower(0);
-        }
-
-        if (A1){
+        if (B1) {
+            shooter.shootArtifact(shooter.getActualVel() < shooter.getDesiredRevs() ? 2 : power);
+            if (shooter.getActualVel() > shooter.getDesiredRevs()){
+                intake.moveIntake(1);
+                indexer.moveIndexer(1);
+            } else {
+                intake.moveIntake(0);
+                indexer.moveIndexer(0);
+            }
+        } else if (A1){
             intake.moveIntake(LT1 > .1 ? -1 : 1);
             indexer.moveIndexer(LT1 > .1 ? -1 : 1);
         } else if(X1) {
             intake.moveIntake(LT1 > .1 ? -1 : 1);
         } else if (Y1){
             indexer.moveIndexer(LT1 > .1 ? -1 : 1);
-        } else {
+        } else{
+            Shooter.shooterMotor.setPower(0);
             intake.moveIntake(0);
             indexer.moveIndexer(0);
+            timer0.reset();
+
         }
 
 
-        if (B2){
-            ChassisController.topLeft.setPower(1);
-        } else if (A2){
-            ChassisController.topRight.setPower(1);
-         }else if (X2){
-            ChassisController.rearLeft.setPower(1);
-        } else if (Y2){
-            ChassisController.rearRight.setPower(1);
-        } else {
-            chassis.stopMotors();
+        if (RSx2 != 0){
+            turret.moveServo(RSx2);
         }
+
 
 
 
         //chassis.mecanumDrive(LSx2,LSy2,RSx2 );
-
         //turret.moveTurret(RSx2, Camera_Detection.bearing);
 
 
         telemetry.addData("Range ", Camera_Detection.range);
-        telemetry.addData("MotorPower", shooter.shooterMotor.getPower());
+        telemetry.addData("MotorPower", shooter.getActualVel());
         telemetry.addData("Bearing", Camera_Detection.bearing);
-        telemetry.addData("Velocity", shooter.shooterMotor.getVelocity());
         telemetry.addData("yaw", ChassisController.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-
-        telemetry.addData("motorvelocity", shooter.shooterMotor.getVelocity(AngleUnit.DEGREES));
-        Dashboard.sendTelemetry();
+        telemetry.addData("timer", timer0.seconds());
+        telemetry.addData("power", Shooter.shooterMotor.getPower());
         telemetry.update();
     }
     public void waitFor(double seconds) {
