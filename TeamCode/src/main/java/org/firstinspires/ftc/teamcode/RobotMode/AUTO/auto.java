@@ -4,14 +4,19 @@ import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.artifactPos
 import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.artifactPos2;
 import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.artifactPos3;
 import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.artifactsObelisk;
+import static org.firstinspires.ftc.teamcode.RobotFunctions.Chassis.ChassisController.deadWheelY;
+import static org.firstinspires.ftc.teamcode.RobotFunctions.Chassis.ChassisController.getDistanceInchesY;
+import static org.firstinspires.ftc.teamcode.RobotFunctions.Chassis.ChassisController.topLeft;
 import static org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter.actualArtifact;
 import static org.firstinspires.ftc.teamcode.RobotMode.Dashboard.ftcDashboard;
+import static org.firstinspires.ftc.teamcode.Variables.Constants.TILE_LENGHT;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Camera.Camera_Detection;
 import org.firstinspires.ftc.teamcode.ControlSystems.VoltageCompensator;
+import org.firstinspires.ftc.teamcode.RobotFunctions.Chassis.ChassisController;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Sensors;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter;
 
@@ -19,15 +24,22 @@ import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter;
 public class auto extends LinearOpMode {
 
     Camera_Detection cameraDetection;
+    ChassisController chassisController;
+    Sensors sensors;
+
+    Shooter shooter;
     @Override
     public void runOpMode() throws InterruptedException {
         cameraDetection = new Camera_Detection(hardwareMap);
-        Sensors sensors = new Sensors(hardwareMap);
-        Shooter shooter = new Shooter(hardwareMap);
+        sensors = new Sensors(hardwareMap);
 
-
+        shooter = new Shooter(hardwareMap);
+        chassisController = new ChassisController(hardwareMap);
 
         VoltageCompensator voltageCompensator = new VoltageCompensator(hardwareMap);
+        chassisController.resetEncoders();
+
+
         while(opModeInInit()){
             ftcDashboard.sendImage(cameraDetection.streamProcessor.getLastFrame());
 
@@ -48,11 +60,18 @@ public class auto extends LinearOpMode {
             ftcDashboard.sendImage(cameraDetection.streamProcessor.getLastFrame());
             telemetry.addData("actual artifact", actualArtifact);
             telemetry.addData("Motor Actual Power", shooter.shooterMotor.getPower());
+            telemetry.addData("ticks", deadWheelY.getCurrentPosition());
+            telemetry.addData("ticksmotor", topLeft.getCurrentPosition());
             updateTelemetry(telemetry);
             cameraDetection.CameraDetection();
 
-            shooter.categorizeColor(sensors.getArtifactColor(),Camera_Detection.range);
+            //shooter.categorizeColor(sensors.getArtifactColor(),Camera_Detection.range);
+
+
+            chassisController.mecanumDriveAuto(0, TILE_LENGHT);
+
+
         }
-        shooter.stopMotors();
+        //shooter.stopMotors();
     }
 }

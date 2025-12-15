@@ -35,7 +35,7 @@ public class PID {
         timer.reset();
 
         //Get the motor output
-        return (kP * error) + (kI * sumError) + (kD * derivative) + (setPoint * kF);
+        return (kP * error) + (kI * sumError) + (kD * derivative) ;
     }
 
 

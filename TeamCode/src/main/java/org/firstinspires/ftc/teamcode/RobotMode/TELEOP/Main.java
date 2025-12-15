@@ -80,18 +80,15 @@ public class Main extends OpMode {
     public void loop() {
 
         updateControllerInput();
-        chassis.mecanumDrive(
-                LSx1 > .1 || LSx1 < -.1 ? LSx1 : 0,
-                LSy1 > .1 || LSy1 < -.1 ? LSy1 : 0,
-                RSx1 > .1 || RSx1 < -.1 ? RSx1 : 0
-        );
+//        chassis.mecanumDrive(
+//                LSx1 > .1 || LSx1 < -.1 ? LSx1 : 0,
+//                LSy1 > .1 || LSy1 < -.1 ? LSy1 : 0,
+//                RSx1 > .1 || RSx1 < -.1 ? RSx1 : 0
+//        );
         Dashboard.initDashboard(chassis.getDistanceInchesX(), chassis.getDistanceInchesY(),10,10);
 
         cameraDetection.CameraDetection();
         ftcDashboard.sendImage(cameraDetection.streamProcessor.getLastFrame());
-
-        intake.moveIntake(RB2 ? 1:0);
-        indexer.moveIndexer(LB2 ? 1:0);
 
         //turret.turretServo.setPower(RSx1);
 
@@ -114,12 +111,34 @@ public class Main extends OpMode {
             indexer.moveIndexer(0);
         }
 
+
+        if (B2){
+            ChassisController.topLeft.setPower(1);
+        } else if (A2){
+            ChassisController.topRight.setPower(1);
+         }else if (X2){
+            ChassisController.rearLeft.setPower(1);
+        } else if (Y2){
+            ChassisController.rearRight.setPower(1);
+        } else {
+            chassis.stopMotors();
+        }
+
+
+
+        //chassis.mecanumDrive(LSx2,LSy2,RSx2 );
+
+        //turret.moveTurret(RSx2, Camera_Detection.bearing);
+
+
         telemetry.addData("Range ", Camera_Detection.range);
         telemetry.addData("MotorPower", shooter.shooterMotor.getPower());
         telemetry.addData("Bearing", Camera_Detection.bearing);
         telemetry.addData("Velocity", shooter.shooterMotor.getVelocity());
+        telemetry.addData("yaw", ChassisController.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
 
         telemetry.addData("motorvelocity", shooter.shooterMotor.getVelocity(AngleUnit.DEGREES));
+        Dashboard.sendTelemetry();
         telemetry.update();
     }
     public void waitFor(double seconds) {

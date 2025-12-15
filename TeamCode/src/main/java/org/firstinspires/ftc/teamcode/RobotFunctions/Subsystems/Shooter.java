@@ -4,7 +4,11 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.artifactPos1;
 import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.artifactsObelisk;
 import static org.firstinspires.ftc.teamcode.ControlSystems.VoltageCompensator.compensateVoltage;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kF;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kI;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kP;
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.power;
+import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.HDHEX_TICKS_PER_REV;
 import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.maxDist;
 import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.maxVel;
 import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.minDist;
@@ -17,9 +21,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.ControlSystems.PID;
 import org.firstinspires.ftc.teamcode.ControlSystems.VoltageCompensator;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Sensors;
 
+import java.security.KeyFactory;
 import java.util.Objects;
 
 public class Shooter {
@@ -28,6 +34,8 @@ public class Shooter {
     ElapsedTime timer = new ElapsedTime();
 
     public static int actualArtifact = 0;
+
+    public static double actualVel;
 
 
     public Shooter (HardwareMap hardwareMap){
@@ -43,6 +51,12 @@ public class Shooter {
         // formula: velmin + (actdist - min_distance) * ((maxvel - minvel) / (distmax - distmin))
         //175.76 cm a .7889
         //34.9 cm a .5409
+    }
+
+    public void shootArtifact(double distance){
+        actualVel = ((shooterMotor.getVelocity()/HDHEX_TICKS_PER_REV) * 60)/6000;
+        PID pid = new PID();
+        shooterMotor.setPower(pid.calculatePIDF(shooterPower(distance),shooterMotor.getPower(),1,0,0, 0.986));
     }
 
     public void categorizeColor(String actualColor, double cameraDistance) {
@@ -83,15 +97,8 @@ public class Shooter {
                 shooterMotor.setPower(shooterPower(cameraDistance));
                 setpointPower = shooterPower(cameraDistance);
             }
-
             shooterMotor.setPower(shooterPower(cameraDistance));
-
         }
-
-
-
-
-
     }
     public void stopMotors(){
         shooterMotor.setPower(0);
