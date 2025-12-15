@@ -80,7 +80,11 @@ public class Main extends OpMode {
     public void loop() {
 
         updateControllerInput();
-
+        chassis.mecanumDrive(
+                LSx1 > .1 || LSx1 < -.1 ? LSx1 : 0,
+                LSy1 > .1 || LSy1 < -.1 ? LSy1 : 0,
+                RSx1 > .1 || RSx1 < -.1 ? RSx1 : 0
+        );
         Dashboard.initDashboard(chassis.getDistanceInchesX(), chassis.getDistanceInchesY(),10,10);
 
         cameraDetection.CameraDetection();
@@ -99,24 +103,21 @@ public class Main extends OpMode {
         }
 
         if (A1){
-            intake.moveIntake(1);
-        } else if (X1) {
-            indexer.moveIndexer(1);
+            intake.moveIntake(LT1 > .1 ? -1 : 1);
+            indexer.moveIndexer(LT1 > .1 ? -1 : 1);
+        } else if(X1) {
+            intake.moveIntake(LT1 > .1 ? -1 : 1);
+        } else if (Y1){
+            indexer.moveIndexer(LT1 > .1 ? -1 : 1);
         } else {
             intake.moveIntake(0);
             indexer.moveIndexer(0);
         }
 
-
-        //chassis.mecanumDrive(LSx2,LSy2,RSx2 );
-
-        //turret.moveTurret(RSx2, Camera_Detection.bearing);
-
-
-
         telemetry.addData("Range ", Camera_Detection.range);
         telemetry.addData("MotorPower", shooter.shooterMotor.getPower());
         telemetry.addData("Bearing", Camera_Detection.bearing);
+        telemetry.addData("Velocity", shooter.shooterMotor.getVelocity());
 
         telemetry.addData("motorvelocity", shooter.shooterMotor.getVelocity(AngleUnit.DEGREES));
         telemetry.update();
