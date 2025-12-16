@@ -11,9 +11,9 @@ import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kP;
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.power;
 import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.HDHEX_TICKS_PER_REV;
 import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.maxDist;
-import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.maxVel;
+//import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.maxVel;
 import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.minDist;
-import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.minVel;
+//import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.minVel;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -46,14 +46,14 @@ public class Shooter {
 
 
     public double shooterPower(double distance) {
-        return compensateVoltage(minVel + (distance - minDist) * ((maxVel - minVel) / (maxDist - minDist)));
+        //return compensateVoltage(minVel + (distance - minDist) * ((maxVel - minVel) / (maxDist - minDist)));
         // formula: velmin + (actdist - min_distance) * ((maxvel - minvel) / (distmax - distmin))
         //175.76 cm a .7889
         //34.9 cm a .5409
     }
 
     public double getDesiredRevs(){
-        return (3200 + (power - .67)*((5150 - 3200)/(.915-.67)));
+        return (3050 + (power - .67)*((5050 - 3200)/(.915-.67)));
     }
 
     public void shootArtifact(double distance) {

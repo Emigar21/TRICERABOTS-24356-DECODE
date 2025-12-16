@@ -145,6 +145,7 @@ public class Main extends OpMode {
         telemetry.addData("yaw", ChassisController.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
         telemetry.addData("timer", timer0.seconds());
         telemetry.addData("power", Shooter.shooterMotor.getPower());
+        telemetry.addData("desiredRevs", shooter.getDesiredRevs());
         telemetry.update();
     }
     public void waitFor(double seconds) {
