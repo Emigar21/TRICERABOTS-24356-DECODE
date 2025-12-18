@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotFunctions.Chassis;
 
 
+import static org.firstinspires.ftc.teamcode.ControlSystems.PID.errorAngle;
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kAngleChassisD;
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kAngleChassisF;
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kAngleChassisI;
@@ -198,31 +199,31 @@ public class ChassisController {
 //    }
 
 
-    public static void mecanumDriveAuto(double X, double Y){
+    public void mecanumDriveAuto(double X, double Y, double multiplier){
 
-        errorAxisX = Math.abs(X - getDistanceInchesX()); // error in the X axis that is always positive
+        //errorAxisX = Math.abs(X - getDistanceInchesX()); // error in the X axis that is always positive
+        resetEncoders();
         errorAxisY = Math.abs(Y - getDistanceInchesY()); // error in the Y axis that is always positive
 
-        double  turn = 0.01 * (0 - ( -1 * imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)));
+        double  turn =  imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
 
-        while (errorAxisX > 0.4 || errorAxisY > 0.4) { // while the error is greater than 0.05 is gonig to keep moving
-
+        while (errorAxisY > 2) { // while the error is greater than 0.05 is gonig to keep moving
             powerErrorX = X - getDistanceInchesX(); //create the error of the power in the X axis
             powerErrorY = Y - getDistanceInchesY(); //create the error of the power in the Y axis
 
-            double power = pid.calculatePIDF(Math.hypot(X, Y),Math.hypot(powerErrorX, powerErrorY), kChassisP, kChassisI,kChassisD,kChassisF);
+            double power =  multiplier* pid.calculatePIDF(Y,powerErrorY, kChassisP, kChassisI,kChassisD,kChassisF);
 
             double theta = Math.atan2(powerErrorY, powerErrorX); //create the angle of the robot that we want to move
             double sin = Math.sin(theta - Math.PI / 4); //create the sin of the angle
             double cos = Math.cos(theta - Math.PI / 4); //create the cos of the angle
             double max = Math.max(Math.abs(sin), Math.abs(cos)); //create the max of the sin and the cos
 
-            topLeft.setPower(power * (cos / max) ); //set the power of the motors
-            topRight.setPower(power * (sin / max) ); //set the power of the motors
-            rearLeft.setPower(power * (sin / max) ); //set the power of the motors
-            rearRight.setPower(power * (cos / max) ); //set the power of the motors
+            topLeft.setPower(power * (cos / max) - 0); //set the power of the motors
+            topRight.setPower(power * (sin / max) + 0.06); //set the power of the motors
+            rearLeft.setPower(power * (sin / max) - 0); //set the power of the motors
+            rearRight.setPower(power * (cos / max) + 0.06); //set the power of the motors
 
-            errorAxisX = Math.abs(X - getDistanceInchesX()); // set the new error of the X axis
+            //errorAxisX = Math.abs(X - getDistanceInchesX()); // set the new error of the X axis
             errorAxisY = Math.abs(Y - getDistanceInchesY()); // set the new error of the Y axis
             //is going to be moving while the error is greater than 0.05, if the error is less than 0.05, the robot is going to stop
             //the robot is constantly adjusting the power of the motors to move to the desired position in case the robot is desviated from the desired position
@@ -238,5 +239,22 @@ public class ChassisController {
 
         }
         stopMotors();
+    }
+
+    public void rotateChassis(double angle){
+        double currentAngle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        double pene = pid.calculateAngleChassisPID(angle,currentAngle,kAngleChassisP,kAngleChassisI,kAngleChassisD,kAngleChassisF);
+
+        while( Math.abs(errorAngle) > 1) {
+            currentAngle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+
+
+            topLeft.setPower(-pid.calculateAngleChassisPID(angle,currentAngle,kAngleChassisP,kAngleChassisI,kAngleChassisD,kAngleChassisF)); //set the power of the motors
+            topRight.setPower(pid.calculateAngleChassisPID(angle,currentAngle,kAngleChassisP,kAngleChassisI,kAngleChassisD,kAngleChassisF)); //set the power of the motors
+            rearLeft.setPower(-pid.calculateAngleChassisPID(angle,currentAngle,kAngleChassisP,kAngleChassisI,kAngleChassisD,kAngleChassisF)); //set the power of the motors
+            rearRight.setPower(pid.calculateAngleChassisPID(angle,currentAngle,kAngleChassisP,kAngleChassisI,kAngleChassisD,kAngleChassisF));
+        }
+        stopMotors();
+
     }
 }

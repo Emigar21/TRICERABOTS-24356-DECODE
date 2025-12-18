@@ -3,7 +3,11 @@ package org.firstinspires.ftc.teamcode.RobotMode;
 
 
 import static org.firstinspires.ftc.teamcode.ControlSystems.PID.error;
+import static org.firstinspires.ftc.teamcode.ControlSystems.PID.errorAngle;
+import static org.firstinspires.ftc.teamcode.RobotFunctions.Chassis.ChassisController.getDistanceInchesY;
+import static org.firstinspires.ftc.teamcode.RobotFunctions.Chassis.ChassisController.imu;
 import static org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter.shooterMotor;
+import static org.firstinspires.ftc.teamcode.Variables.Constants.TILE_LENGHT;
 
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -11,8 +15,9 @@ import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-public class Dashboard {
+public class Dashboard extends Thread{
     public static FtcDashboard ftcDashboard = FtcDashboard.getInstance();
     public static TelemetryPacket packet;
     public static Telemetry dashboardTelemetry = ftcDashboard.getTelemetry();
@@ -22,6 +27,13 @@ public class Dashboard {
 
 
 
+
+    public void run(){
+        while(isAlive()){
+            initDashboard(0,0,0,0);
+
+        }
+    }
     public static void initDashboard(double xPosition, double yPosition, double xGoal, double yGoal){
         packet = new TelemetryPacket(false);
 
@@ -38,5 +50,7 @@ public class Dashboard {
         //Send the packet to te ftc dashboard//In progress
         ftcDashboard.sendTelemetryPacket(packet);
     }
+
+
 
 }

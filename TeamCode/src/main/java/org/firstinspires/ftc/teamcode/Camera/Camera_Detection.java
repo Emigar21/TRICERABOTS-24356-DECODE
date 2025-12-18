@@ -33,7 +33,7 @@ public class Camera_Detection{
     public static double bearing;
     public static double range;
     public double elevation;
-    public double id;
+    public static double id;
     public static boolean detection;
 
     public static String artifactPos1;

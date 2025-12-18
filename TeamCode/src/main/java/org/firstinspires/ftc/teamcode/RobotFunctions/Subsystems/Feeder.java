@@ -18,4 +18,8 @@ public class Feeder {
     public void moveFeeder(double power){
         feederMotor.setPower(power);
     }
+
+    public void stopFeeder(){
+        feederMotor.setPower(0);
+    }
 }

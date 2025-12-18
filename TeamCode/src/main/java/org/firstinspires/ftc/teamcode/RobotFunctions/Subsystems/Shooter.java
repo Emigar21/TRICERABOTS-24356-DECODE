@@ -45,16 +45,19 @@ public class Shooter {
     }
 
 
-    public double shooterPower(double distance) {
+    public static double shooterPower(double distance) {
         //return compensateVoltage(minVel + (distance - minDist) * ((maxVel - minVel) / (maxDist - minDist)));
         // formula: velmin + (actdist - min_distance) * ((maxvel - minvel) / (distmax - distmin))
         //175.76 cm a .7889
         //34.9 cm a .5409
+        return 0;
     }
 
-    public double getDesiredRevs(){
+    public static double getDesiredRevs(){
         return (3050 + (power - .67)*((5050 - 3200)/(.915-.67)));
     }
+    //TODO: QUE ES?
+
 
     public void shootArtifact(double distance) {
         //actualVel = ((shooterMotor.getVelocity()/HDHEX_TICKS_PER_REV) * 60)/6000;
@@ -64,7 +67,7 @@ public class Shooter {
 
 
 
-    public  double getActualVel(){
+    public static double getActualVel(){
         return (shooterMotor.getVelocity()/HDHEX_TICKS_PER_REV) * 60;
     }
 
@@ -76,7 +79,7 @@ public class Shooter {
                 shooterMotor.setPower(0.8);
             }
 
-            stopMotors();
+            stopShooter();
             if (actualArtifact == 2){
                 actualArtifact = 0;
             } else{
@@ -88,10 +91,10 @@ public class Shooter {
             while(timer.seconds() < 5) {
                 shooterMotor.setPower(.4);
             }
-            stopMotors();
+            stopShooter();
 
         } else {
-            stopMotors();
+            stopShooter();
         }
     }
 
@@ -109,7 +112,7 @@ public class Shooter {
             shooterMotor.setPower(shooterPower(cameraDistance));
         }
     }
-    public void stopMotors(){
+    public void stopShooter(){
         shooterMotor.setPower(0);
     }
 }

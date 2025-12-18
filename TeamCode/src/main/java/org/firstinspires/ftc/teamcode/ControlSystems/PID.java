@@ -45,29 +45,30 @@ public class PID {
     double orientationSaturation;
     double orientationDerivative;
     ElapsedTime orientationTimer = new ElapsedTime();
+   public static double errorAngle;
     public double calculateAngleChassisPID(double setPoint, double actualOrientation, double kOrientationP, double kOrientationI, double kOrientationD, double kOrientationF){
         //set the Proportional calculation
-        double error = angleWrap(setPoint - actualOrientation);
+        errorAngle = setPoint - actualOrientation;
 
         //Make a condition so there is not saturation on the Integral calculation
-        orientationSaturation = error - prevOrientationError;
+        orientationSaturation = errorAngle - prevOrientationError;
         if(Math.abs(orientationSaturation) < -.1){
             //Calculate the integral sum
-            sumOrientationError += error * orientationTimer.seconds();
+            sumOrientationError += errorAngle * orientationTimer.seconds();
         }
 
         //Calculate the derivative
-        orientationDerivative = (error - prevOrientationError)/orientationTimer.seconds();
+        orientationDerivative = (errorAngle - prevOrientationError)/orientationTimer.seconds();
 
         //Get the last error
-        prevOrientationError = error;
+        prevOrientationError = errorAngle;
 
         //Reset timer
         orientationTimer.reset();
 
         //Get the motor output
 
-        return  (kOrientationP * error) + (kOrientationI * sumOrientationError) + (kOrientationD * orientationDerivative) + (setPoint * kOrientationF);
+        return  (kOrientationP * errorAngle) + (kOrientationI * sumOrientationError) + (kOrientationD * orientationDerivative) + (setPoint * kOrientationF);
     }
     //Function that help us go to the nearest path for orientation
     public static double angleWrap(double angle) {

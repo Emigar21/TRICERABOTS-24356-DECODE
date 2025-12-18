@@ -27,17 +27,17 @@ public class ConfigVariables {
     public static double kTurretF = 0;
 
     //Chassis Distance Values
-    public static double kChassisP = 0;
+    public static double kChassisP = 0.0098;
     //Recommended ??
-    public static double kChassisI = 0;
+    public static double kChassisI = 0.00175;
     public static double kChassisD = 0;
-    public static double kChassisF = 0;
+    public static double kChassisF = 0.0028;
 
     //Chassis Angle Values
     public static double kAngleChassisP = 0.002;
     public static double kAngleChassisI = 0.0002;
     public static double kAngleChassisD;
-    public static double kAngleChassisF;
+    public static double kAngleChassisF = 0.004;
 
 
 

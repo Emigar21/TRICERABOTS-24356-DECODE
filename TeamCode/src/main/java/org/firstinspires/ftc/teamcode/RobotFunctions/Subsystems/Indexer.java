@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Indexer {
-    public DcMotorEx indexerMotor;
+    public static DcMotorEx indexerMotor;
     public Indexer (HardwareMap hardwareMap){
         indexerMotor = hardwareMap.get(DcMotorEx.class,"indexerMotor");
 
@@ -16,5 +16,9 @@ public class Indexer {
 
     public void moveIndexer (double power){
         indexerMotor.setPower(power);
+    }
+
+    public void stopIndexer(){
+        indexerMotor.setPower(0);
     }
 }

@@ -14,34 +14,29 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Camera.Camera_Detection;
 import org.firstinspires.ftc.teamcode.ControlSystems.VoltageCompensator;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Indexer;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.SubsystemInitializer;
 import org.firstinspires.ftc.teamcode.RobotMode.Dashboard;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Chassis.ChassisController;
 
 import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Turret;
+import org.firstinspires.ftc.teamcode.RobotMode.TelemetryMethods;
 
-@TeleOp(name="Main",group="Robot")
-public class Main extends OpMode {
+@TeleOp(name="BlueTeleOp",group="TeleOps")
+public class Blue_Alliance_TeleOp extends OpMode {
 
     ChassisController chassis;
     Camera_Detection cameraDetection;
 
-    Shooter shooter;
-
-    Turret turret;
-    Indexer indexer;
-    Intake intake;
-    CRServo servo;
-
-    VoltageCompensator voltageCompensator;
-    //Feeder feeder;
-
+    SubsystemInitializer subsystemInitializer;
+    TelemetryMethods telemetryMethods;
 
     // Controller Input
 
@@ -61,27 +56,19 @@ public class Main extends OpMode {
 
 
     Dashboard dashboard;
-    boolean isAlive = false;
-    boolean timed0 = false;
-    boolean initTimer0 = false;
 
     ElapsedTime timer0 = new ElapsedTime();
-    double velocity;
 
     @Override
     public void init() {
         chassis = new ChassisController(hardwareMap);
         cameraDetection = new Camera_Detection(hardwareMap);
-        servo = hardwareMap.get(CRServo.class, "servo");
 
-        voltageCompensator = new VoltageCompensator(hardwareMap);
+        subsystemInitializer = new SubsystemInitializer(hardwareMap);
 
-        //turret = new Turret(hardwareMap);
-        shooter = new Shooter(hardwareMap);
-        indexer = new Indexer(hardwareMap);
-        intake = new Intake(hardwareMap);
         telemetry = new MultipleTelemetry(telemetry,dashboardTelemetry);
-        //feeder = new Feeder(hardwareMap);
+
+        telemetryMethods = new TelemetryMethods();
 
         timer0.reset();
     }
@@ -90,63 +77,41 @@ public class Main extends OpMode {
     public void loop() {
 
         updateControllerInput();
-//        chassis.mecanumDrive(
-//                LSx1 > .1 || LSx1 < -.1 ? LSx1 : 0,
-//                LSy1 > .1 || LSy1 < -.1 ? LSy1 : 0,
-//                RSx1 > .1 || RSx1 < -.1 ? RSx1 : 0
-//        );
-
         Dashboard.initDashboard(chassis.getDistanceInchesX(), chassis.getDistanceInchesY(),10,10);
+
+        telemetryMethods.ClearTelemetry(telemetry);
+        telemetryMethods.TelemetryShooter(telemetry);
+
 
         cameraDetection.CameraDetection();
         ftcDashboard.sendImage(cameraDetection.streamProcessor.getLastFrame());
 
-        //turret.turretServo.setPower(RSx1);
-
         if (B1) {
-            shooter.shootArtifact(shooter.getActualVel() < shooter.getDesiredRevs() ? 2 : power);
-            if (shooter.getActualVel() > shooter.getDesiredRevs()){
-                intake.moveIntake(1);
-                indexer.moveIndexer(1);
+            subsystemInitializer.shooter.shootArtifact(subsystemInitializer.shooter.getActualVel() < subsystemInitializer.shooter.getDesiredRevs() ? 2 : power);
+            if (subsystemInitializer.shooter.getActualVel() > subsystemInitializer.shooter.getDesiredRevs()){
+                subsystemInitializer.intake.moveIntake(1);
+                subsystemInitializer.indexer.moveIndexer(1);
             } else {
-                intake.moveIntake(0);
-                indexer.moveIndexer(0);
+                subsystemInitializer.intake.moveIntake(0);
+                subsystemInitializer.indexer.moveIndexer(0);
             }
         } else if (A1){
-            intake.moveIntake(LT1 > .1 ? -1 : 1);
-            indexer.moveIndexer(LT1 > .1 ? -1 : 1);
+            subsystemInitializer.intake.moveIntake(LT1 > .1 ? -1 : 1);
+            subsystemInitializer.indexer.moveIndexer(LT1 > .1 ? -1 : 1);
         } else if(X1) {
-            intake.moveIntake(LT1 > .1 ? -1 : 1);
+            subsystemInitializer.intake.moveIntake(LT1 > .1 ? -1 : 1);
         } else if (Y1){
-            indexer.moveIndexer(LT1 > .1 ? -1 : 1);
+            subsystemInitializer.indexer.moveIndexer(LT1 > .1 ? -1 : 1);
         } else{
-            Shooter.shooterMotor.setPower(0);
-            intake.moveIntake(0);
-            indexer.moveIndexer(0);
+
+           subsystemInitializer.stopAllSubMotors();
             timer0.reset();
-
         }
 
+//        if (RSx2 != 0){
+//            subsystemInitializer.turret.moveServo(RSx2);
+//        }
 
-        if (RSx2 != 0){
-            turret.moveServo(RSx2);
-        }
-
-
-
-
-        //chassis.mecanumDrive(LSx2,LSy2,RSx2 );
-        //turret.moveTurret(RSx2, Camera_Detection.bearing);
-
-
-        telemetry.addData("Range ", Camera_Detection.range);
-        telemetry.addData("MotorPower", shooter.getActualVel());
-        telemetry.addData("Bearing", Camera_Detection.bearing);
-        telemetry.addData("yaw", ChassisController.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-        telemetry.addData("timer", timer0.seconds());
-        telemetry.addData("power", Shooter.shooterMotor.getPower());
-        telemetry.addData("desiredRevs", shooter.getDesiredRevs());
-        telemetry.update();
     }
     public void waitFor(double seconds) {
         ElapsedTime timer = new ElapsedTime();
