@@ -35,4 +35,10 @@ public class SubsystemInitializer {
         indexer.stopIndexer();
         feeder.stopFeeder();
     }
+
+    public void stopCycling(){
+        intake.stopIntake();
+        indexer.stopIndexer();
+        feeder.stopFeeder();
+    }
 }

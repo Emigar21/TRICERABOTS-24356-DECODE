@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Feeder {
 
-    public DcMotorEx feederMotor;
+    public static DcMotorEx feederMotor;
     public Feeder(HardwareMap hardwareMap){
         feederMotor = hardwareMap.get(DcMotorEx.class, "feederMotor");
 

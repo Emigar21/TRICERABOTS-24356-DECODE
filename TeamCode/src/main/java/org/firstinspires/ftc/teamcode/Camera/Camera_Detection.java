@@ -1,9 +1,5 @@
 package org.firstinspires.ftc.teamcode.Camera;
 
-//import static org.firstinspires.ftc.teamcode.Autonomous.Camera_Autonomous.cameraOrientation;
-//import static org.firstinspires.ftc.teamcode.Autonomous.Camera_Autonomous.cameraPosition;
-
-
 import android.graphics.Bitmap;
 import android.util.Size;
 

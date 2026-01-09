@@ -129,6 +129,10 @@ public class ChassisController {
         rearLeft.setPower(0);
         rearRight.setPower(0);
     }
+    public void chassisFollow(double turnSetPoint){
+        mecanumDrive(0,0, turnSetPoint);
+
+    }
 
 
     public void mecanumDrive(double X, double Y, double orientation) {

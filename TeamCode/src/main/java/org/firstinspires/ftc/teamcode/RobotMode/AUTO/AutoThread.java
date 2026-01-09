@@ -9,7 +9,7 @@ public class AutoThread extends Thread{
 
     public void run(){
         while (isAlive()) {
-            Intake.moveIntake(1);
+
         }
     }
 }

@@ -31,9 +31,7 @@ import java.util.Objects;
 
 public class Shooter {
     public static DcMotorEx shooterMotor;
-
-    ElapsedTime timer = new ElapsedTime();
-
+    public static ElapsedTime timer = new ElapsedTime();
     public static int actualArtifact = 0;
 
 
@@ -41,11 +39,13 @@ public class Shooter {
         shooterMotor = hardwareMap.get(DcMotorEx.class, "shooterMotor");
 
         shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        shooterMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
+    public void shoot(double power){
+        shooterMotor.setPower(power);
     }
 
-
-    public static double shooterPower(double distance) {
+    public static double getShooterPower(double distance) {
         //return compensateVoltage(minVel + (distance - minDist) * ((maxVel - minVel) / (maxDist - minDist)));
         // formula: velmin + (actdist - min_distance) * ((maxvel - minvel) / (distmax - distmin))
         //175.76 cm a .7889
@@ -60,8 +60,7 @@ public class Shooter {
 
 
     public void shootArtifact(double distance) {
-        //actualVel = ((shooterMotor.getVelocity()/HDHEX_TICKS_PER_REV) * 60)/6000;
-        shooterMotor.setPower(compensateVoltage(power));
+       shooterMotor.setPower(compensateVoltage(power));
     }
 
 
@@ -103,13 +102,13 @@ public class Shooter {
 
 
     public void shootAllArtifacts(double cameraDistance){
-        double setpointPower = shooterPower(cameraDistance);
+        double setpointPower = getShooterPower(cameraDistance);
         for (int i=0; i < 2; i++){
             while (setpointPower < shooterMotor.getPower()) {
-                shooterMotor.setPower(shooterPower(cameraDistance));
-                setpointPower = shooterPower(cameraDistance);
+                shooterMotor.setPower(getShooterPower(cameraDistance));
+                setpointPower = getShooterPower(cameraDistance);
             }
-            shooterMotor.setPower(shooterPower(cameraDistance));
+            shooterMotor.setPower(getShooterPower(cameraDistance));
         }
     }
     public void stopShooter(){

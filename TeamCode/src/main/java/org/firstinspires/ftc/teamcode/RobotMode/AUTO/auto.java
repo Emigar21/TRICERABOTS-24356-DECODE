@@ -84,12 +84,12 @@ AutoThread autoThread;
             chassisController.mecanumDriveAuto(0,TILE_LENGHT*1.784, 1);
             chassisController.rotateChassis(-89);
 
-            Intake.moveIntake(1);
+
             indexer.moveIndexer(1);
 
             chassisController.mecanumDriveAuto(0, 24, 0.65);
             chassisController.mecanumDriveAuto(0, 17, 0.4);
-            Intake.moveIntake(0);
+
             indexer.moveIndexer(0);
 
 

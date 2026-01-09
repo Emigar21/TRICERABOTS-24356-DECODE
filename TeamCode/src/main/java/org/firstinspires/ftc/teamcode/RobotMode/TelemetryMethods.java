@@ -3,14 +3,16 @@ package org.firstinspires.ftc.teamcode.RobotMode;
 import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.bearing;
 import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.id;
 import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.range;
+import static org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Feeder.feederMotor;
+import static org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Indexer.indexerMotor;
+import static org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Intake.intakeMotor;
 
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.ControlSystems.PID;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Chassis.ChassisController;
-import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Indexer;
+import org.firstinspires.ftc.teamcode.RobotFunctions.Sensors;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter;
-import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Turret;
 
 public class TelemetryMethods {
     PID pid = new PID();
@@ -43,15 +45,19 @@ public class TelemetryMethods {
         telemetry.update();
     }
 
-    //Values gathered from ConfigVariables
-    public void TelemetryTurret(Telemetry telemetry){
-        telemetry.addData("Indexer Power", Indexer.indexerMotor.getPower());
-        telemetry.addData("Turret Power", Turret.turretServo.getPower());
-    }
-
     public void TelemetryShooter(Telemetry telemetry){
-        telemetry.addData("Shooter power", Shooter.shooterPower(range));
+        telemetry.addData("Shooter power", Shooter.getShooterPower(range));
         telemetry.addData("Actual Vel", Shooter.getActualVel());
         telemetry.addData("Revs Needed", Shooter.getDesiredRevs());
+    }
+
+    public void TelemetryCyclying(Telemetry telemetry){
+        telemetry.addData("Intake Revs", intakeMotor.getVelocity());
+        telemetry.addData("Indexer Revs", indexerMotor.getVelocity());
+        telemetry.addData("Feeder", feederMotor.getVelocity());
+    }
+
+    public void telemetrySensors(Telemetry telemetry){
+        telemetry.addData("Color", Sensors.getColor());
     }
 }
