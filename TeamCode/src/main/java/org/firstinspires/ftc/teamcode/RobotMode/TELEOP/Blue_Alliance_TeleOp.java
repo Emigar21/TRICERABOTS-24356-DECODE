@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotMode.TELEOP;
 
+import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.bearing;
+import static org.firstinspires.ftc.teamcode.ControlSystems.VoltageCompensator.compensateVoltage;
 import static org.firstinspires.ftc.teamcode.RobotMode.Dashboard.dashboardTelemetry;
 import static org.firstinspires.ftc.teamcode.RobotMode.Dashboard.ftcDashboard;
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.power;
@@ -24,6 +26,7 @@ public class Blue_Alliance_TeleOp extends OpMode {
     Camera_Detection cameraDetection;
 
     TelemetryMethods telemetryMethods;
+    boolean follow = false;
 
     // Controller Input
 
@@ -44,20 +47,20 @@ public class Blue_Alliance_TeleOp extends OpMode {
 
     Dashboard dashboard;
 
-    ElapsedTime timer0 = new ElapsedTime();
+    ElapsedTime timer = new ElapsedTime();
 
     @Override
     public void init() {
         chassis = new ChassisController(hardwareMap);
         cameraDetection = new Camera_Detection(hardwareMap);
-
         subsystemInitializer = new SubsystemInitializer(hardwareMap);
 
         telemetry = new MultipleTelemetry(telemetry,dashboardTelemetry);
-
         telemetryMethods = new TelemetryMethods();
 
-        timer0.reset();
+        telemetryMethods.InitTelemetry(telemetry);
+
+        timer.reset();
     }
 
     @Override
@@ -72,28 +75,45 @@ public class Blue_Alliance_TeleOp extends OpMode {
 
         cameraDetection.CameraDetection();
         ftcDashboard.sendImage(cameraDetection.streamProcessor.getLastFrame());
-        chassis.mecanumDrive(LSx1, LSy1, RSx1);
+
+        if(B1){
+            chassis.stopMotors();
+        }  else if(X1) {
+            follow = !follow;
+        } else if(follow){
+            chassis.chassisFollow(bearing);
+        } else if (Math.abs(LSx1) > .2 || Math.abs(LSy1) > .2 || Math.abs(RSx1) > .2 ){
+            chassis.mecanumDrive(
+                    LB1 ? LSx1 * .3 * (timer.seconds() * 2) : LSx1 * (timer.seconds() * 2),
+                    LB1 ? LSy1 * .3 * (timer.seconds() * 2): LSy1 * (timer.seconds() * 2),
+                    LB1 ? RSx1 * .3 * (timer.seconds() * 2): RSx1 * (timer.seconds() * 2)
+            );
+        } else {
+            timer.reset();
+            chassis.stopMotors();
+        }
 
         if(B2){
             subsystemInitializer.stopCycling();
         } else if (Y2){
-            subsystemInitializer.intake.moveIntake(RT2 > .1 ? RT2 : -LT2);
+            subsystemInitializer.intake.moveIntake(LSy2);
         } else if (X2) {
-            subsystemInitializer.indexer.moveIndexer(RT2 > .1 ? RT2 : -LT2);
-        } else if (A2){
-          subsystemInitializer.feeder.moveFeeder(RT2 > .1 ? RT2 : -LT2);
-        } else if (RT2 > .1 || LT2 > .1){
-            subsystemInitializer.intake.moveIntake(RT2 > .1 ? RT2 : -LT2);
-            subsystemInitializer.indexer.moveIndexer(RT2 > .1 ? RT2 : -LT2);
-            subsystemInitializer.feeder.moveFeeder(RT2 > .1 ? RT2 : -LT2);
+            subsystemInitializer.indexer.moveIndexer(LSy2);
+        } else if (Math.abs(RSy2) > .1){
+          subsystemInitializer.feeder.moveFeeder(RSy2);
+        } else if (Math.abs(LSy2) > .1){
+            subsystemInitializer.intake.moveIntake(LSy2);
+            subsystemInitializer.indexer.moveIndexer(LSy2);
         } else {
             subsystemInitializer.stopCycling();
         }
 
         if (B2){
           subsystemInitializer.shooter.stopShooter();
-        } else if (RB2){
-            subsystemInitializer.shooter.shoot(power);
+        } else if(LT2 > .1 && RT2 > .2) {
+        subsystemInitializer.shooter.shoot(RT2);
+        } else if (RT2 > .2){
+            subsystemInitializer.shooter.shoot(compensateVoltage(power));
         } else {
             subsystemInitializer.shooter.stopShooter();
         }
@@ -105,7 +125,7 @@ public class Blue_Alliance_TeleOp extends OpMode {
         RT1 = gamepad1.right_trigger;
         LT1 = gamepad1.left_trigger;
         LSx1 = gamepad1.left_stick_x;
-        LSy1 = gamepad1.left_stick_y;
+        LSy1 =-gamepad1.left_stick_y;
         RSx1 = gamepad1.right_stick_x;
         RSy1 = gamepad1.right_stick_y;
         LB1 = gamepad1.left_bumper;

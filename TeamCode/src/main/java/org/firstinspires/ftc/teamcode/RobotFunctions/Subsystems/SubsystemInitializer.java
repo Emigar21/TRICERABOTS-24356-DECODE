@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.ControlSystems.PID;
 import org.firstinspires.ftc.teamcode.ControlSystems.VoltageCompensator;
+import org.firstinspires.ftc.teamcode.RobotFunctions.Sensors;
 
 public class SubsystemInitializer {
     //public Turret turret;
@@ -14,6 +15,7 @@ public class SubsystemInitializer {
     public Indexer indexer;
     public Feeder feeder;
     public Shooter shooter;
+    public Sensors sensors;
 
     VoltageCompensator voltageCompensator;
     PID pid = new PID();
@@ -24,6 +26,7 @@ public class SubsystemInitializer {
         feeder = new Feeder(hardwareMap);
         shooter = new Shooter(hardwareMap);
 
+        sensors = new Sensors(hardwareMap);
         voltageCompensator = new VoltageCompensator(hardwareMap);
 
     }

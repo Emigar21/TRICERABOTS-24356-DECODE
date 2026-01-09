@@ -16,7 +16,7 @@ public class VoltageCompensator {
         return voltageSensor.getVoltage();
     }
 
-    public static double compensateVoltage( double outputo){
-        return outputo * (12 / getVoltage());
+    public static double compensateVoltage( double output){
+        return output * (12 / getVoltage());
     }
 }

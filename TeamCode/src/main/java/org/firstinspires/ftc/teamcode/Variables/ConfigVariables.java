@@ -20,11 +20,11 @@ public class ConfigVariables {
     public static double kF = 0;
 
     //Turret values
-    public static double kTurretP = 0;
-    public static double kTurretI = 0;
+    public static double kFollowP = 0;
+    public static double kFollowI = 0;
 
-    public static double kTurretD = 0;
-    public static double kTurretF = 0;
+    public static double kFollowD = 0;
+    public static double kFollowF = 0;
 
     //Chassis Distance Values
     public static double kChassisP = 0.0098;

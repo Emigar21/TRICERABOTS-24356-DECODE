@@ -10,6 +10,10 @@ import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kChassisD
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kChassisF;
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kChassisI;
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kChassisP;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kFollowD;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kFollowF;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kFollowI;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kFollowP;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -18,6 +22,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Camera.Camera_Detection;
@@ -84,8 +89,8 @@ public class ChassisController {
 
         topLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
         topRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        rearLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        rearRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        rearLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        rearRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
 
         deadWheelY = topLeft;
         deadWheelX = topRight;
@@ -123,15 +128,14 @@ public class ChassisController {
     }
 
     //function that sets the power of the motors in 0
-    public static void stopMotors() {
+    public void stopMotors() {
         topLeft.setPower(0);
         topRight.setPower(0);
         rearLeft.setPower(0);
         rearRight.setPower(0);
     }
-    public void chassisFollow(double turnSetPoint){
-        mecanumDrive(0,0, turnSetPoint);
-
+    public void chassisFollow(double bearing){
+        mecanumDrive(0,0, pid.calculatePIDF(0,bearing, kFollowP, kFollowI, kFollowD, kFollowF));
     }
 
 

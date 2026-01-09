@@ -11,7 +11,7 @@ public class Indexer {
         indexerMotor = hardwareMap.get(DcMotorEx.class,"indexerMotor");
 
         indexerMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        indexerMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        indexerMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void moveIndexer (double power){

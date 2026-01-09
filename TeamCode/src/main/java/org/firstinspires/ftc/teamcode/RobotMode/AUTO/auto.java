@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotMode.AUTO;
 
 import static org.firstinspires.ftc.teamcode.RobotFunctions.Chassis.ChassisController.imu;
-import static org.firstinspires.ftc.teamcode.RobotFunctions.Chassis.ChassisController.stopMotors;
+
 import static org.firstinspires.ftc.teamcode.RobotMode.Dashboard.ftcDashboard;
 import static org.firstinspires.ftc.teamcode.Variables.Constants.TILE_LENGHT;
 
@@ -97,6 +97,6 @@ AutoThread autoThread;
 
 
         }
-        stopMotors();
+
     }
 }

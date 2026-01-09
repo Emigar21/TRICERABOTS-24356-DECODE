@@ -53,8 +53,9 @@ public class Red_Alliance_TeleOp extends OpMode {
 
         subsystemInitializer = new SubsystemInitializer(hardwareMap);
         telemetryMethods = new TelemetryMethods();
-        Sensors sensors = new Sensors(hardwareMap);
         telemetry = new MultipleTelemetry(telemetry,dashboardTelemetry);
+
+        telemetryMethods.InitTelemetry(telemetry);
 
         timer0.reset();
     }
