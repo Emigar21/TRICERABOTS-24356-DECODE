@@ -47,7 +47,7 @@ AutoThread autoThread;
 
         autoThread = new AutoThread();
 
-        dashboard.start();
+        //dashboard.start();
 
 
 
@@ -63,7 +63,7 @@ AutoThread autoThread;
 //            telemetry.addData("pos3", artifactsObelisk[2]);
             updateTelemetry(telemetry);
 
-            cameraDetection.CameraDetection();
+//            cameraDetection.CameraDetection();
             cameraDetection.getObelisk();
 
 

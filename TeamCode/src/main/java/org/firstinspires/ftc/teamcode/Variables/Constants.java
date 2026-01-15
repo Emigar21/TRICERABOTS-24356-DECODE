@@ -12,8 +12,8 @@ public class Constants {
     public static class shooterConst{
         public static final double minDist = 38;
         public static final double maxDist = 165.76;
-        public static final double MIN_POWER = .67;
-        public static final double MAX_POWER = .92;
+        public static final double minVel = .67;
+        public static final double maxVel = .92;
         //175.76 cm a .7889
         //34.9 cm a .5409
 

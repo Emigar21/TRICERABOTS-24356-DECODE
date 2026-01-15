@@ -5,8 +5,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Variables.ConfigVariables;
 
 public class PID {
-    double prevTurretError = 0;
-    public static double sumTurretError;
     public static double error;
     static double prevError;
     double sumError;

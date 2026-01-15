@@ -47,11 +47,10 @@ public class Camera_Detection{
         YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
                 0, -90, 0, 0);
         // Set the position of the camera in the robot
+        /// (esto hay que cambiarlo, está al lado, no en el centro)
         Position cameraPosition = new Position(DistanceUnit.INCH,
                 0, 0, 0, 0);
         detectionProcessor = new AprilTagProcessor.Builder()
-                //Draw the axes at the Live view whenever it detect a AprilTag
-                .setDrawAxes(true)
                 //Set Camera´s position and orientation in the robot
                 .setCameraPose(cameraPosition, cameraOrientation)
                 //Specify the april Tags that we will use this competition
@@ -68,7 +67,7 @@ public class Camera_Detection{
                 //We assign the aprilTagProcessor and visionProcessor (Used for Stream)
                 .addProcessors(detectionProcessor, streamProcessor)
                 //that we gonna use
-                .setCameraResolution(new Size(1280,720))
+                .setCameraResolution(new Size(640,480))
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .setLiveViewContainerId(R.id.cameraMonitorViewId)
                 .setAutoStartStreamOnBuild(true)
@@ -76,34 +75,65 @@ public class Camera_Detection{
     }
 
 
-    public void CameraDetection() {
+    public void CameraDetectionBlue() {
         if (detectionProcessor.getDetections().isEmpty()) {
             detection = false;
         } else {
-            //isDetecting() = aprilTagProcessor.getDetections().isEmpty();
             for (AprilTagDetection detection : detectionProcessor.getDetections()) {
                 // We put the detection values into the detectionValues array
                 id = detection.id;
 
-                //Getting xDistance, yDistance and zDistance
-                x = detection.ftcPose.x;
-                y = detection.ftcPose.y;
-                z = detection.ftcPose.z;
+                if (id == 20) {
 
-                //Getting Yaw, Pitch and Roll, used on angulation/orientation
-                yaw = detection.ftcPose.yaw;
-                pitch = detection.ftcPose.pitch;
-                roll = detection.ftcPose.roll;
+                    //Getting xDistance, yDistance and zDistance
+                    x = detection.ftcPose.x;
+                    y = detection.ftcPose.y;
+                    z = detection.ftcPose.z;
 
-                //Getting range, bearing and elevation
-                range = detection.ftcPose.range;
-                bearing = detection.ftcPose.bearing;
-                elevation = detection.ftcPose.elevation;
+                    //Getting Yaw, Pitch and Roll, used on angulation/orientation
+                    yaw = detection.ftcPose.yaw;
+                    pitch = detection.ftcPose.pitch;
+                    roll = detection.ftcPose.roll;
+
+                    //Getting range, bearing and elevation
+                    range = detection.ftcPose.range;
+                    bearing = detection.ftcPose.bearing;
+                    elevation = detection.ftcPose.elevation;
+                }
             }
             detection = true;
         }
     }
 
+    public void CameraDetectionRed() {
+        if (detectionProcessor.getDetections().isEmpty()) {
+            detection = false;
+        } else {
+            for (AprilTagDetection detection : detectionProcessor.getDetections()) {
+                // We put the detection values into the detectionValues array
+                id = detection.id;
+
+                if (id == 24) {
+
+                    //Getting xDistance, yDistance and zDistance
+                    x = detection.ftcPose.x;
+                    y = detection.ftcPose.y;
+                    z = detection.ftcPose.z;
+
+                    //Getting Yaw, Pitch and Roll, used on angulation/orientation
+                    yaw = detection.ftcPose.yaw;
+                    pitch = detection.ftcPose.pitch;
+                    roll = detection.ftcPose.roll;
+
+                    //Getting range, bearing and elevation
+                    range = detection.ftcPose.range;
+                    bearing = detection.ftcPose.bearing;
+                    elevation = detection.ftcPose.elevation;
+                }
+            }
+            detection = true;
+        }
+    }
 
     public static String[] artifactsObelisk = new String[3];
 

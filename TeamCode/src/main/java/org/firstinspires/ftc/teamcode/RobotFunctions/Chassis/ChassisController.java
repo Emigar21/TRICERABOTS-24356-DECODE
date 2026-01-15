@@ -80,20 +80,20 @@ public class ChassisController {
         rearRight = hardwareMap.get(DcMotorEx.class, "rearRight");
 
         //set motor directions
-        topLeft.setDirection(DcMotorEx.Direction.REVERSE);
-        topRight.setDirection(DcMotorEx.Direction.FORWARD);
-        rearLeft.setDirection(DcMotorEx.Direction.REVERSE);
-        rearRight.setDirection(DcMotorEx.Direction.FORWARD);
+        topLeft.setDirection(DcMotorEx.Direction.FORWARD);
+        topRight.setDirection(DcMotorEx.Direction.REVERSE);
+        rearLeft.setDirection(DcMotorEx.Direction.FORWARD);
+        rearRight.setDirection(DcMotorEx.Direction.REVERSE);
 
         //set zero power behavior
 
-        topLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        topRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        rearLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        rearRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        topLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        topRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        rearLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        rearRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
-        deadWheelY = topLeft;
-        deadWheelX = topRight;
+//        deadWheelY = topLeft;
+//        deadWheelX = topRight;
 
 
         //Initialize IMU
@@ -121,10 +121,10 @@ public class ChassisController {
 
     //function that reset encoders
     public  void resetEncoders() {
-        topLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         topLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        topRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        topRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        topRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rearLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rearRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     //function that sets the power of the motors in 0
@@ -139,7 +139,8 @@ public class ChassisController {
     }
 
 
-    public void mecanumDrive(double X, double Y, double orientation) {
+    public void mecanumDrive(double X, double Y, double turn) {
+        turn *= -1;
 
         double power = Math.hypot(X, Y);
         double theta = Math.atan2(Y, X); //create the angle of the robot that we want to move
@@ -148,10 +149,27 @@ public class ChassisController {
         double max = Math.max(Math.abs(sin), Math.abs(cos)); //create the max of the sin and the cos
         //double turn = pid.calculateAngleChassisPID(orientation, imu.getRobotYawPitchRollAngles().getYaw());
 
-        topLeft.setPower(power * (cos / max) + orientation); //set the power of the motors
-        topRight.setPower(power * (sin / max) - orientation); //set the power of the motors
-        rearLeft.setPower(power * (sin / max) + orientation); //set the power of the motors
-        rearRight.setPower(power * (cos / max) - orientation); //set the power of the motors
+        topLeft.setPower(power * cos / max + turn); //set the power of the motors
+        topRight.setPower(power * sin / max - turn); //set the power of the motors
+        rearLeft.setPower(power * sin / max + turn); //set the power of the motors
+        rearRight.setPower(power * cos / max - turn); //set the power of the motors
+    }
+
+    public void slowMode(double X, double Y, double turn) {
+
+        turn *= -1;
+
+        double power = Math.hypot(X, Y);
+        double theta = Math.atan2(Y, X); //create the angle of the robot that we want to move
+        double sin = Math.sin(theta - Math.PI / 4); //create the sin of the angle
+        double cos = Math.cos(theta - Math.PI / 4); //create the cos of the angle
+        double max = Math.max(Math.abs(sin), Math.abs(cos)); //create the max of the sin and the cos
+
+        topLeft.setPower((power * cos / max + turn) * .3); //set the power of the motors
+        topRight.setPower((power * sin / max - turn) * .3); //set the power of the motors
+        rearLeft.setPower((power * sin / max + turn) * .3); //set the power of the motors
+        rearRight.setPower((power * cos / max - turn) * .3); //set the power of the motors
+
     }
 
 

@@ -12,7 +12,9 @@ import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.power;
 import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.HDHEX_TICKS_PER_REV;
 import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.maxDist;
 //import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.maxVel;
+import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.maxVel;
 import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.minDist;
+import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.minVel;
 //import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.minVel;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -22,6 +24,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Camera.Camera_Detection;
 import org.firstinspires.ftc.teamcode.ControlSystems.PID;
 import org.firstinspires.ftc.teamcode.ControlSystems.VoltageCompensator;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Sensors;
@@ -41,30 +44,21 @@ public class Shooter {
         shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
-    public void shoot(double power){
-        shooterMotor.setPower(power);
+    public void shoot(){
+        shooterMotor.setPower(getShooterPower(Camera_Detection.range));
     }
 
+
+    ///las dos funciones que siguen se necesitan checar, cambie la resolucaión a ver si es eso lo
+    /// que hace que tenga un delay
     public static double getShooterPower(double distance) {
-        //return compensateVoltage(minVel + (distance - minDist) * ((maxVel - minVel) / (maxDist - minDist)));
+        return compensateVoltage(minVel + (distance - minDist) * ((maxVel - minVel) / (maxDist - minDist)));
         // formula: velmin + (actdist - min_distance) * ((maxvel - minvel) / (distmax - distmin))
-        //175.76 cm a .7889
-        //34.9 cm a .5409
-        return 0;
     }
 
     public static double getDesiredRevs(){
         return (3050 + (power - .67)*((5050 - 3200)/(.915-.67)));
     }
-    //TODO: QUE ES?
-
-
-    public void shootArtifact(double distance) {
-       shooterMotor.setPower(compensateVoltage(power));
-    }
-
-
-
 
     public static double getActualVel(){
         return (shooterMotor.getVelocity()/HDHEX_TICKS_PER_REV) * 60;

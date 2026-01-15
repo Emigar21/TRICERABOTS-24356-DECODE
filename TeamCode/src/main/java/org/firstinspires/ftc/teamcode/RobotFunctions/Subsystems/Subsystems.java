@@ -1,16 +1,12 @@
 package org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.ControlSystems.PID;
 import org.firstinspires.ftc.teamcode.ControlSystems.VoltageCompensator;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Sensors;
 
-public class SubsystemInitializer {
-    //public Turret turret;
+public class Subsystems {
     public Intake intake;
     public Indexer indexer;
     public Feeder feeder;
@@ -19,8 +15,7 @@ public class SubsystemInitializer {
 
     VoltageCompensator voltageCompensator;
     PID pid = new PID();
-    public SubsystemInitializer (HardwareMap hardwareMap){
-        //turret = new Turret(hardwareMap);
+    public Subsystems(HardwareMap hardwareMap){
         intake= new Intake(hardwareMap);
         indexer = new Indexer(hardwareMap);
         feeder = new Feeder(hardwareMap);
@@ -32,7 +27,6 @@ public class SubsystemInitializer {
     }
 
     public void stopAllSubMotors(){
-        //turret.stopTurret();
         shooter.stopShooter();
         intake.stopIntake();
         indexer.stopIndexer();

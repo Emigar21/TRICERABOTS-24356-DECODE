@@ -8,12 +8,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Camera.Camera_Detection;
-import org.firstinspires.ftc.teamcode.RobotFunctions.Sensors;
-import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.SubsystemInitializer;
+import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Subsystems;
 import org.firstinspires.ftc.teamcode.RobotMode.Dashboard;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Chassis.ChassisController;
 
-import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotMode.TelemetryMethods;
 
 @TeleOp(name="RedTeleOp",group="TeleOps")
@@ -23,7 +21,7 @@ public class Red_Alliance_TeleOp extends OpMode {
     Camera_Detection cameraDetection;
     TelemetryMethods telemetryMethods;
 
-    SubsystemInitializer subsystemInitializer;
+    Subsystems subsystems;
 
     // Controller Input
 
@@ -51,7 +49,7 @@ public class Red_Alliance_TeleOp extends OpMode {
         chassis = new ChassisController(hardwareMap);
         cameraDetection = new Camera_Detection(hardwareMap);
 
-        subsystemInitializer = new SubsystemInitializer(hardwareMap);
+        subsystems = new Subsystems(hardwareMap);
         telemetryMethods = new TelemetryMethods();
         telemetry = new MultipleTelemetry(telemetry,dashboardTelemetry);
 
@@ -88,7 +86,7 @@ public class Red_Alliance_TeleOp extends OpMode {
         LT2 = gamepad2.left_trigger;
         LSx2 = gamepad2.left_stick_x;
         LSy2 = -gamepad2.left_stick_y;
-        RSy2 = -gamepad2.right_stick_y;
+        RSy2 = gamepad2.right_stick_y;
         LB2 = gamepad2.left_bumper;
         RB2 = gamepad2.right_bumper;
         RSx2 = gamepad2.right_stick_x;
