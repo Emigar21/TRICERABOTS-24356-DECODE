@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.ControlSystems.PID;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Chassis.ChassisController;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Sensors;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.RobotMode.TELEOP.Blue_Alliance_TeleOp;
 
 public class TelemetryMethods {
     PID pid = new PID();
@@ -49,6 +50,8 @@ public class TelemetryMethods {
         telemetry.addData("Shooter power", Shooter.getShooterPower(range));
         telemetry.addData("Actual Vel", Shooter.getActualVel());
         telemetry.addData("Revs Needed", Shooter.getDesiredRevs());
+        telemetry.addData("LSy1", Blue_Alliance_TeleOp.LSy1);
+        telemetry.addData("RSx1", Blue_Alliance_TeleOp.RSx1);
     }
 
     public void TelemetryCyclying(Telemetry telemetry){
