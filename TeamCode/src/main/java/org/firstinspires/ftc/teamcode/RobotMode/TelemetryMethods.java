@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.range;
 import static org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Feeder.feederMotor;
 import static org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Indexer.indexerMotor;
 import static org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Intake.intakeMotor;
+import static org.firstinspires.ftc.teamcode.RobotMode.TELEOP.Red_Alliance_TeleOp.follow;
 
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -52,6 +53,7 @@ public class TelemetryMethods {
         telemetry.addData("Revs Needed", Shooter.getDesiredRevs());
         telemetry.addData("LSy1", Blue_Alliance_TeleOp.LSy1);
         telemetry.addData("RSx1", Blue_Alliance_TeleOp.RSx1);
+        telemetry.addData("follow", follow);
     }
 
     public void TelemetryCyclying(Telemetry telemetry){

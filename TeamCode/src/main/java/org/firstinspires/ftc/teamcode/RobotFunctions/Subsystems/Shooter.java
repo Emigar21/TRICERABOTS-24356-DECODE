@@ -45,7 +45,7 @@ public class Shooter {
         shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     public void shoot(){
-        shooterMotor.setPower(getShooterPower(Camera_Detection.range));
+        shooterMotor.setPower(compensateVoltage(power));
     }
 
 
@@ -57,7 +57,7 @@ public class Shooter {
     }
 
     public static double getDesiredRevs(){
-        return (3050 + (power - .67)*((5050 - 3200)/(.9925-.67)));
+        return (3050 + (power - .67)*((6857 - 3200)/(.9925-.67)));
     }
 
     public static double getActualVel(){

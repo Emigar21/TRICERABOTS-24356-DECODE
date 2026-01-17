@@ -70,7 +70,7 @@ public class Blue_Alliance_TeleOp extends OpMode {
     public void loop() {
 
         updateControllerInput();
-        //Dashboard.initDashboard(chassis.getDistanceInchesX(), chassis.getDistanceInchesY(),10,10);
+        Dashboard.initDashboard(chassis.getDistanceInchesX(), chassis.getDistanceInchesY(),10,10);
 
         telemetryMethods.ClearTelemetry(telemetry);
         telemetryMethods.TelemetryShooter(telemetry);
@@ -78,6 +78,7 @@ public class Blue_Alliance_TeleOp extends OpMode {
 
         cameraDetection.CameraDetectionBlue();
         ftcDashboard.sendImage(cameraDetection.streamProcessor.getLastFrame());
+
 
 //        if(B1){
 //            chassis.stopMotors();
@@ -106,7 +107,7 @@ public class Blue_Alliance_TeleOp extends OpMode {
         if (isSlowActive)
             chassis.slowMode(LSx1, LSy1, RSx1);
         else {
-            chassis.mecanumDrive(LSx1, LSy1, RSx1);
+            chassis.mecanumDrive(LSx1*2, LSy1*2, RSx1*2);
         }
         ////subsystems
 

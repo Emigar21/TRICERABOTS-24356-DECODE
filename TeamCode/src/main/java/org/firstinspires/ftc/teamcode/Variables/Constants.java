@@ -13,7 +13,7 @@ public class Constants {
         public static final double minDist = 38;
         public static final double maxDist = 165.76;
         public static final double minVel = .67;
-        public static final double maxVel = .92;
+        public static final double maxVel = .9925;
         //175.76 cm a .7889
         //34.9 cm a .5409
 
