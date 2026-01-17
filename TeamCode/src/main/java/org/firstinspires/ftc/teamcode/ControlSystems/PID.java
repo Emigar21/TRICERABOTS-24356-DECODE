@@ -9,11 +9,11 @@ public class PID {
     public static double sumTurretError;
     public static double error;
     static double prevError;
-    double sumError;
-    double derivative;
-    double saturation;
-    ElapsedTime timer = new ElapsedTime();
-    public double calculatePIDF(double setPoint, double actualPosition, double kP, double kI,
+    static double sumError;
+    static double derivative;
+    static double saturation;
+    static ElapsedTime timer = new ElapsedTime();
+    public static double calculatePIDF(double setPoint, double actualPosition, double kP, double kI,
                                       double kD, double kF){
         //set the Proportional calculation
         error = setPoint - actualPosition;

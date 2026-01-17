@@ -42,11 +42,11 @@ public class Shooter {
         shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     public void shoot(double power){
-        shooterMotor.setPower(power);
+        shooterMotor.setPower(compensateVoltage(power));
     }
 
     public static double getShooterPower(double distance) {
-        //return compensateVoltage(minVel + (distance - minDist) * ((maxVel - minVel) / (maxDist - minDist)));
+        //return compensateVoltage( + (distance - minDist) * (( - ) / (maxDist - minDist)));
         // formula: velmin + (actdist - min_distance) * ((maxvel - minvel) / (distmax - distmin))
         //175.76 cm a .7889
         //34.9 cm a .5409
@@ -54,7 +54,7 @@ public class Shooter {
     }
 
     public static double getDesiredRevs(){
-        return (3050 + (power - .67)*((5050 - 3200)/(.915-.67)));
+        return (3050 + (power - .67)*((5050 - 3200)/(.9925-.67)));
     }
     //TODO: QUE ES?
 

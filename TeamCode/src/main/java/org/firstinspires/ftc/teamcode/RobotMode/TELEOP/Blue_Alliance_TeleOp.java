@@ -1,9 +1,14 @@
 package org.firstinspires.ftc.teamcode.RobotMode.TELEOP;
 
 import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.bearing;
+import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.range;
 import static org.firstinspires.ftc.teamcode.ControlSystems.VoltageCompensator.compensateVoltage;
 import static org.firstinspires.ftc.teamcode.RobotMode.Dashboard.dashboardTelemetry;
 import static org.firstinspires.ftc.teamcode.RobotMode.Dashboard.ftcDashboard;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kFollowD;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kFollowF;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kFollowI;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kFollowP;
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.power;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -12,6 +17,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Camera.Camera_Detection;
+import org.firstinspires.ftc.teamcode.ControlSystems.PID;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.SubsystemInitializer;
 import org.firstinspires.ftc.teamcode.RobotMode.Dashboard;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Chassis.ChassisController;
@@ -69,7 +75,6 @@ public class Blue_Alliance_TeleOp extends OpMode {
         updateControllerInput();
         //Dashboard.initDashboard(chassis.getDistanceInchesX(), chassis.getDistanceInchesY(),10,10);
 
-        telemetryMethods.ClearTelemetry(telemetry);
         telemetryMethods.TelemetryShooter(telemetry);
         telemetryMethods.TelemetryCyclying(telemetry);
 
@@ -81,12 +86,12 @@ public class Blue_Alliance_TeleOp extends OpMode {
         }  else if(X1) {
             follow = !follow;
         } else if(follow){
-            chassis.chassisFollow(bearing);
+            chassis.mecanumDrive(LSx1,LSy1, PID.calculatePIDF(0,bearing,kFollowP,kFollowI,kFollowD,kFollowF));
         } else if (Math.abs(LSx1) > .2 || Math.abs(LSy1) > .2 || Math.abs(RSx1) > .2 ){
             chassis.mecanumDrive(
-                    LB1 ? LSx1 * .3 * (timer.seconds() * 2) : LSx1 * (timer.seconds() * 2),
-                    LB1 ? LSy1 * .3 * (timer.seconds() * 2): LSy1 * (timer.seconds() * 2),
-                    LB1 ? RSx1 * .3 * (timer.seconds() * 2): RSx1 * (timer.seconds() * 2)
+                    LB1 ? LSx1 * .3 : LSx1 ,
+                    LB1 ? LSy1 * .3 : LSy1 ,
+                    LB1 ? RSx1 * .3 : RSx1
             );
         } else {
             timer.reset();
@@ -99,21 +104,26 @@ public class Blue_Alliance_TeleOp extends OpMode {
             subsystemInitializer.intake.moveIntake(LSy2);
         } else if (X2) {
             subsystemInitializer.indexer.moveIndexer(LSy2);
-        } else if (Math.abs(RSy2) > .1){
-          subsystemInitializer.feeder.moveFeeder(RSy2);
         } else if (Math.abs(LSy2) > .1){
             subsystemInitializer.intake.moveIntake(LSy2);
             subsystemInitializer.indexer.moveIndexer(LSy2);
         } else {
-            subsystemInitializer.stopCycling();
+            subsystemInitializer.intake.stopIntake();
+            subsystemInitializer.indexer.stopIndexer();
+        }
+
+        if (Math.abs(RSy2) > .1){
+            subsystemInitializer.feeder.moveFeeder(RSy2);
+        } else {
+            subsystemInitializer.feeder.stopFeeder();
         }
 
         if (B2){
           subsystemInitializer.shooter.stopShooter();
         } else if(LT2 > .1 && RT2 > .2) {
-        subsystemInitializer.shooter.shoot(RT2);
+        subsystemInitializer.shooter.shoot(RT2*.9);
         } else if (RT2 > .2){
-            subsystemInitializer.shooter.shoot(compensateVoltage(power));
+            subsystemInitializer.shooter.shoot(power);
         } else {
             subsystemInitializer.shooter.stopShooter();
         }

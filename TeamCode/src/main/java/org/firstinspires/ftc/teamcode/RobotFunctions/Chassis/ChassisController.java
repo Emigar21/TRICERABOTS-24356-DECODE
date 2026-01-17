@@ -87,10 +87,10 @@ public class ChassisController {
 
         //set zero power behavior
 
-        topLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        topRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        rearLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        rearRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        topLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        topRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        rearLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        rearRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
         deadWheelY = topLeft;
         deadWheelX = topRight;
