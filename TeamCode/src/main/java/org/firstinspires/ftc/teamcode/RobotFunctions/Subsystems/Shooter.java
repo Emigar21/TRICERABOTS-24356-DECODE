@@ -57,7 +57,7 @@ public class Shooter {
     }
 
     public static double getDesiredRevs(){
-        return (3050 + (power - .67)*((5050 - 3200)/(.915-.67)));
+        return (3050 + (power - .67)*((5050 - 3200)/(.9925-.67)));
     }
 
     public static double getActualVel(){
