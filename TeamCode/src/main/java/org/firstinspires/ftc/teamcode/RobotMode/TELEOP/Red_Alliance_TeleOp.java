@@ -83,8 +83,8 @@ public class Red_Alliance_TeleOp extends OpMode {
         }  else if(X1) {
             timer.reset();
             follow = !follow;
-            while (timer.seconds()> .5){
-
+            while (timer.seconds()< .1){
+                chassis.chassisFollow(bearing);
             }
         } else if(follow){
             chassis.chassisFollow(bearing);
@@ -95,7 +95,7 @@ public class Red_Alliance_TeleOp extends OpMode {
                     LB1 ? RSx1 * .3 : RSx1
             );
         } else {
-            timer.reset();
+
             chassis.stopMotors();
         }
 
@@ -128,7 +128,7 @@ public class Red_Alliance_TeleOp extends OpMode {
         }
 
         if (RSy2 != 0) {
-            subsystems.feeder.moveFeeder(RSy2);
+            subsystems.feeder.moveFeeder(-RSy2);
         } else {
             subsystems.feeder.stopFeeder();
         }
@@ -143,7 +143,7 @@ public class Red_Alliance_TeleOp extends OpMode {
     public void updateControllerInput(){
         RT1 = gamepad1.right_trigger;
         LT1 = gamepad1.left_trigger;
-        LSx1 = gamepad1.left_stick_x;
+        LSx1 = -gamepad1.left_stick_x;
         LSy1 = gamepad1.left_stick_y;
         RSx1 = gamepad1.right_stick_x;
         RSy1 = gamepad1.right_stick_y;
