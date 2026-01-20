@@ -39,6 +39,8 @@ public class ConfigVariables {
     public static double kAngleChassisD;
     public static double kAngleChassisF = 0.004;
 
+    public static double kCompensator = 12.8;
+
 
 
 }

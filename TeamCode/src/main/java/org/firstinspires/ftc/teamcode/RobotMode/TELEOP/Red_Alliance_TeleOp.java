@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotMode.TELEOP;
 
 import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.bearing;
+import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.range;
 import static org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter.timer;
 import static org.firstinspires.ftc.teamcode.RobotMode.Dashboard.dashboardTelemetry;
 import static org.firstinspires.ftc.teamcode.RobotMode.Dashboard.ftcDashboard;
@@ -113,13 +114,13 @@ public class Red_Alliance_TeleOp extends OpMode {
         }
         ////subsystems
 
-        if (A2 && LSy2 != 0) {
+        if (A2 && Math.abs(LSy2) > .2) {
             subsystems.indexer.moveIndexer(LSy2);
             subsystems.intake.stopIntake();
-        } else if (X2 && LSy2 != 0) {
+        } else if (X2 && Math.abs(LSy2) > .2) {
             subsystems.indexer.stopIndexer();
             subsystems.intake.moveIntake(LSy2);
-        }   else if (LSy2 != 0){
+        }   else if (Math.abs(LSy2) > .2){
             subsystems.intake.moveIntake(LSy2);
             subsystems.indexer.moveIndexer(LSy2);
         } else {
@@ -127,14 +128,14 @@ public class Red_Alliance_TeleOp extends OpMode {
             subsystems.indexer.stopIndexer();
         }
 
-        if (RSy2 != 0) {
+        if (Math.abs(RSy2) > .1) {
             subsystems.feeder.moveFeeder(-RSy2);
         } else {
             subsystems.feeder.stopFeeder();
         }
 
         if (RT2 != 0) {
-            subsystems.shooter.shoot();
+            subsystems.shooter.shoot(range);
         } else {
             subsystems.shooter.stopShooter();
         }

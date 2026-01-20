@@ -44,8 +44,8 @@ public class Shooter {
         shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
-    public void shoot(){
-        shooterMotor.setPower(compensateVoltage(power));
+    public void shoot(double range){
+        shooterMotor.setPower(compensateVoltage(getActualVel() < getDesiredRevs(range) ? 2 : getShooterPower(range)));
     }
 
 
@@ -56,8 +56,8 @@ public class Shooter {
         // formula: velmin + (actdist - min_distance) * ((maxvel - minvel) / (distmax - distmin))
     }
 
-    public static double getDesiredRevs(){
-        return (3050 + (power - .67)*((6857 - 3200)/(.9925-.67)));
+    public static double getDesiredRevs(double range){
+        return (4090 + (getShooterPower(range) - .6)*((5350 - 4090)/(.742-.6)));
     }
 
     public static double getActualVel(){

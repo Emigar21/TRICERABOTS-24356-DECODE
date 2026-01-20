@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotMode.TELEOP;
 
 import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.bearing;
+import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.range;
 import static org.firstinspires.ftc.teamcode.ControlSystems.VoltageCompensator.compensateVoltage;
 import static org.firstinspires.ftc.teamcode.RobotMode.Dashboard.dashboardTelemetry;
 import static org.firstinspires.ftc.teamcode.RobotMode.Dashboard.ftcDashboard;
@@ -132,7 +133,7 @@ public class Blue_Alliance_TeleOp extends OpMode {
         }
 
         if (RT2 != 0) {
-            subsystems.shooter.shoot();
+            subsystems.shooter.shoot(range);
         } else {
             subsystems.shooter.stopShooter();
         }
