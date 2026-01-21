@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.ControlSystems;
 
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kCompensator;
+import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.kAvgVoltage;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
@@ -19,9 +20,8 @@ public class VoltageCompensator {
     }
 
     public static double compensateVoltage( double output){
-        return output * (kCompensator / getVoltage());
-        //12.8
-        //.6
-        //.75
+        output = output * (kAvgVoltage / getVoltage());
+
+        return Math.min(output, kCompensator);
     }
 }

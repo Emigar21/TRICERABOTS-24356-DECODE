@@ -10,13 +10,13 @@ public class Constants {
     }
 
     public static class shooterConst{
-        public static final double minDist = 74;
-        public static final double maxDist = 210;
-        public static final double minVel = .6;
-        public static final double maxVel = .742;
+        public static final double minDist = 75;
+        public static final double maxDist = 211;
+        public static final double minVel = .545;
+        public static final double maxVel = .7175;
         //175.76 cm a .7889
         //34.9 cm a .5409
-
+        public static final double kAvgVoltage = 12.8;
         public static final double HDHEX_TICKS_PER_REV = 21;
 
     }

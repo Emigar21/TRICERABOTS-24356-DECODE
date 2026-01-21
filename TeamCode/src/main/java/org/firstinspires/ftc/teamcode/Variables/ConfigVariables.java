@@ -10,8 +10,6 @@ public class ConfigVariables {
 
     //Shooter Values
     public static double power = 0;
-    public static double revs = 0;
-    public static double timer = 0;
 
     public static double kP = 0;
     public static double kI = 0;
@@ -39,7 +37,7 @@ public class ConfigVariables {
     public static double kAngleChassisD;
     public static double kAngleChassisF = 0.004;
 
-    public static double kCompensator = 12.8;
+    public static double kCompensator = 0;
 
 
 
