@@ -132,7 +132,7 @@ public class ChassisController {
         rearRight.setPower(0);
     }
     public void chassisFollow(double bearing){
-        mecanumDrive(0,0, pid.calculatePIDF(0,bearing, kFollowP, kFollowI, kFollowD, kFollowF));
+        mecanumDrive(0,0, pid.calculatePIDF(3.5,bearing, kFollowP, kFollowI, kFollowD, kFollowF));
     }
 
 

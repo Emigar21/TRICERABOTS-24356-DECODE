@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.RobotMode.TELEOP;
 
 import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.bearing;
+import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.range;
+import static org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter.getActualVel;
+import static org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter.getDesiredRevs;
 import static org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter.timer;
 import static org.firstinspires.ftc.teamcode.RobotMode.Dashboard.dashboardTelemetry;
 import static org.firstinspires.ftc.teamcode.RobotMode.Dashboard.ftcDashboard;
@@ -11,7 +14,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Camera.Camera_Detection;
-import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Subsystems;
 import org.firstinspires.ftc.teamcode.RobotMode.Dashboard;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Chassis.ChassisController;
@@ -44,13 +46,14 @@ public class Red_Alliance_TeleOp extends OpMode {
     boolean A2,B2,Y2,X2;
 
     boolean isSlowActive;
-    boolean isAutoShootActive = false;
     public static boolean follow;
 
 
     Dashboard dashboard;
 
     ElapsedTime timer0 = new ElapsedTime();
+
+    boolean autoMode = true;
 
     @Override
     public void init() {
@@ -96,9 +99,6 @@ public class Red_Alliance_TeleOp extends OpMode {
                     LB1 ? LSy1 * .3 : LSy1 ,
                     LB1 ? RSx1 * .3 : RSx1
             );
-        } else {
-
-            chassis.stopMotors();
         }
 
         ////chassis
@@ -111,52 +111,44 @@ public class Red_Alliance_TeleOp extends OpMode {
         if (isSlowActive)
             chassis.slowMode(LSx1, LSy1, RSx1);
         else {
-            chassis.mecanumDrive(LSx1*2, LSy1*2, RSx1*2);
+            chassis.mecanumDrive(LSx1, LSy1, RSx1);
         }
         ////subsystems
 
-        if(!isAutoShootActive){
+        if (!autoMode){
             if (A2 && LSy2 != 0) {
-                subsystems.indexer.moveIndexer(LSy2);
+                subsystems.indexer.moveIndexer(Math.abs(LSy2) > .2 ? LSy2 : 0);
                 subsystems.intake.stopIntake();
             } else if (X2 && LSy2 != 0) {
                 subsystems.indexer.stopIndexer();
-                subsystems.intake.moveIntake(LSy2);
+                subsystems.intake.moveIntake(Math.abs(LSy2) > .2 ? LSy2 : 0);
             }   else if (LSy2 != 0){
-                subsystems.intake.moveIntake(LSy2);
-                subsystems.indexer.moveIndexer(LSy2);
+                subsystems.intake.moveIntake(Math.abs(LSy2) > .2 ? LSy2 : 0);
+                subsystems.indexer.moveIndexer(Math.abs(LSy2) > .2 ? LSy2 : 0);
             } else {
-                subsystems.intake.stopIntake();
-                subsystems.indexer.stopIndexer();
+                subsystems.stopCycling();
             }
+        }
 
+        if (!autoMode){
             if (RSy2 != 0) {
-                subsystems.feeder.moveFeeder(-RSy2);
+                subsystems.feeder.moveFeeder(Math.abs(RSy2) > .2 ? RSy2 : 0);
             } else {
                 subsystems.feeder.stopFeeder();
             }
         }
 
-//        if (RT2 != 0) {
-//            subsystems.shooter.shoot();
-//        } else {
-//            subsystems.shooter.stopShooter();
-//        }
-
-        if(RT2 != 0){
-            subsystems.shooter.shoot();
-
-            if(Shooter.getActualVel() >= 6500){
-                subsystems.startCycling();
-                isAutoShootActive = true;
-            } else {
-                isAutoShootActive = false;
-                subsystems.stopCycling();
-            }
+        if (RT2 != 0) {
+            autoMode = true;
+            subsystems.shooter.shoot(range);
+            subsystems.intake.moveIntake(getActualVel() < getDesiredRevs(range) ? 0 : 1);
+            subsystems.indexer.moveIndexer(getActualVel() < getDesiredRevs(range) ? 0 : 1);
+            subsystems.feeder.moveFeeder(getActualVel() < getDesiredRevs(range) ? 0 : 1);
         } else {
-            isAutoShootActive = false;
+            autoMode = false;
             subsystems.shooter.stopShooter();
         }
+
     }
     public void updateControllerInput(){
         RT1 = gamepad1.right_trigger;
@@ -180,7 +172,7 @@ public class Red_Alliance_TeleOp extends OpMode {
         LT2 = gamepad2.left_trigger;
         LSx2 = gamepad2.left_stick_x;
         LSy2 = -gamepad2.left_stick_y;
-        RSy2 = gamepad2.right_stick_y;
+        RSy2 = -gamepad2.right_stick_y;
         LB2 = gamepad2.left_bumper;
         RB2 = gamepad2.right_bumper;
         RSx2 = gamepad2.right_stick_x;
