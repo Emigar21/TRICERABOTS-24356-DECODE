@@ -44,10 +44,8 @@ public class Red_Alliance_TeleOp extends OpMode {
     boolean LB2, RB2;
     boolean dPadUp2, dPadDown2, dPadRight2, dPadLeft2;
     boolean A2,B2,Y2,X2;
-
     boolean isSlowActive;
     public static boolean follow;
-
 
     Dashboard dashboard;
 
@@ -71,8 +69,6 @@ public class Red_Alliance_TeleOp extends OpMode {
 
     @Override
     public void loop() {
-
-
         updateControllerInput();
         Dashboard.initDashboard(1, 1,10,10);
 
