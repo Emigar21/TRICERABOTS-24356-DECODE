@@ -1,35 +1,22 @@
 package org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.artifactPos1;
 import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.artifactsObelisk;
 import static org.firstinspires.ftc.teamcode.ControlSystems.VoltageCompensator.compensateVoltage;
-import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kD;
-import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kF;
-import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kI;
-import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kP;
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.power;
 import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.HDHEX_TICKS_PER_REV;
 import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.maxDist;
-//import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.maxVel;
 import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.maxVel;
 import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.minDist;
 import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.minVel;
-//import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.minVel;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Camera.Camera_Detection;
-import org.firstinspires.ftc.teamcode.ControlSystems.PID;
-import org.firstinspires.ftc.teamcode.ControlSystems.VoltageCompensator;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Sensors;
 
-import java.security.KeyFactory;
 import java.util.Objects;
 
 public class Shooter {

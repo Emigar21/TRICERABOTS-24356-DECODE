@@ -10,6 +10,7 @@ public class ConfigVariables {
 
     //Shooter Values
     public static double power = 0;
+    public static double minPower = 0;
     public static double revs = 0;
     public static double timer = 0;
 

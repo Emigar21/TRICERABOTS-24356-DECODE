@@ -26,9 +26,10 @@ public class auto extends LinearOpMode {
 
     //Shooter shooter;
 
-AutoThread autoThread;
+    AutoThread autoThread;
     Dashboard dashboard;
     Intake intake;
+
     @Override
     public void runOpMode() throws InterruptedException {
         cameraDetection = new Camera_Detection(hardwareMap);
@@ -42,18 +43,11 @@ AutoThread autoThread;
 
         indexer = new Indexer(hardwareMap);
 
-
         dashboard = new Dashboard();
 
         autoThread = new AutoThread();
 
         //dashboard.start();
-
-
-
-
-
-
 
         while(opModeInInit()){
             ftcDashboard.sendImage(cameraDetection.streamProcessor.getLastFrame());

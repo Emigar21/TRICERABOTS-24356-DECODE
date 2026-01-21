@@ -17,7 +17,6 @@ import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotMode.TELEOP.Blue_Alliance_TeleOp;
 
 public class TelemetryMethods {
-    PID pid = new PID();
     public void ClearTelemetry(Telemetry telemetry){
         telemetry.clearAll();
     }
@@ -49,10 +48,9 @@ public class TelemetryMethods {
 
     public void TelemetryShooter(Telemetry telemetry){
         telemetry.addData("Shooter power", Shooter.getShooterPower(range));
+        telemetry.addData("Real shooter power", Shooter.shooterMotor.getPower());
         telemetry.addData("Actual Vel", Shooter.getActualVel());
         telemetry.addData("Revs Needed", Shooter.getDesiredRevs());
-        telemetry.addData("LSy1", Blue_Alliance_TeleOp.LSy1);
-        telemetry.addData("RSx1", Blue_Alliance_TeleOp.RSx1);
         telemetry.addData("follow", follow);
     }
 

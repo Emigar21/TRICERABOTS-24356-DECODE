@@ -14,20 +14,18 @@ import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kFollowD;
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kFollowF;
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kFollowI;
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kFollowP;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.power;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.Camera.Camera_Detection;
 import org.firstinspires.ftc.teamcode.ControlSystems.PID;
-import org.firstinspires.ftc.teamcode.RobotMode.Dashboard;
 import org.firstinspires.ftc.teamcode.Variables.Constants;
 
 
@@ -68,8 +66,7 @@ public class ChassisController {
     static double currentCircleY;
     double yDistanceSum;
     double xDistancesSum;
-
-
+    ElapsedTime timer = new ElapsedTime();
 
     public ChassisController(HardwareMap hardwareMap) {
 
@@ -237,7 +234,7 @@ public class ChassisController {
             powerErrorX = X - getDistanceInchesX(); //create the error of the power in the X axis
             powerErrorY = Y - getDistanceInchesY(); //create the error of the power in the Y axis
 
-            double power =  multiplier* pid.calculatePIDF(Y,powerErrorY, kChassisP, kChassisI,kChassisD,kChassisF);
+            double power =  multiplier * pid.calculatePIDF(Y,powerErrorY, kChassisP, kChassisI,kChassisD,kChassisF);
 
             double theta = Math.atan2(powerErrorY, powerErrorX); //create the angle of the robot that we want to move
             double sin = Math.sin(theta - Math.PI / 4); //create the sin of the angle
@@ -282,5 +279,25 @@ public class ChassisController {
         }
         stopMotors();
 
+    }
+
+    public void mecanumDriveByTime (double powerX, double powerY, double time){
+        timer.reset();
+
+        while(timer.seconds() < time){
+            mecanumDrive(powerX, powerY, 0);
+        }
+
+        mecanumDrive(0,0,0); // Stop driving
+    }
+
+    public void mecanumTurnByTime (double spin, double time){
+        timer.reset();
+
+        while(timer.seconds() < time){
+            mecanumDrive(0,0,spin);
+        }
+
+        mecanumDrive(0,0,0); // Stop driving
     }
 }

@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Camera.Camera_Detection;
+import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Subsystems;
 import org.firstinspires.ftc.teamcode.RobotMode.Dashboard;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Chassis.ChassisController;
@@ -43,6 +44,7 @@ public class Red_Alliance_TeleOp extends OpMode {
     boolean A2,B2,Y2,X2;
 
     boolean isSlowActive;
+    boolean isAutoShootActive = false;
     public static boolean follow;
 
 
@@ -113,32 +115,48 @@ public class Red_Alliance_TeleOp extends OpMode {
         }
         ////subsystems
 
-        if (A2 && LSy2 != 0) {
-            subsystems.indexer.moveIndexer(LSy2);
-            subsystems.intake.stopIntake();
-        } else if (X2 && LSy2 != 0) {
-            subsystems.indexer.stopIndexer();
-            subsystems.intake.moveIntake(LSy2);
-        }   else if (LSy2 != 0){
-            subsystems.intake.moveIntake(LSy2);
-            subsystems.indexer.moveIndexer(LSy2);
-        } else {
-            subsystems.intake.stopIntake();
-            subsystems.indexer.stopIndexer();
+        if(!isAutoShootActive){
+            if (A2 && LSy2 != 0) {
+                subsystems.indexer.moveIndexer(LSy2);
+                subsystems.intake.stopIntake();
+            } else if (X2 && LSy2 != 0) {
+                subsystems.indexer.stopIndexer();
+                subsystems.intake.moveIntake(LSy2);
+            }   else if (LSy2 != 0){
+                subsystems.intake.moveIntake(LSy2);
+                subsystems.indexer.moveIndexer(LSy2);
+            } else {
+                subsystems.intake.stopIntake();
+                subsystems.indexer.stopIndexer();
+            }
+
+            if (RSy2 != 0) {
+                subsystems.feeder.moveFeeder(-RSy2);
+            } else {
+                subsystems.feeder.stopFeeder();
+            }
         }
 
-        if (RSy2 != 0) {
-            subsystems.feeder.moveFeeder(-RSy2);
-        } else {
-            subsystems.feeder.stopFeeder();
-        }
+//        if (RT2 != 0) {
+//            subsystems.shooter.shoot();
+//        } else {
+//            subsystems.shooter.stopShooter();
+//        }
 
-        if (RT2 != 0) {
+        if(RT2 != 0){
             subsystems.shooter.shoot();
+
+            if(Shooter.getActualVel() >= 6500){
+                subsystems.startCycling();
+                isAutoShootActive = true;
+            } else {
+                isAutoShootActive = false;
+                subsystems.stopCycling();
+            }
         } else {
+            isAutoShootActive = false;
             subsystems.shooter.stopShooter();
         }
-
     }
     public void updateControllerInput(){
         RT1 = gamepad1.right_trigger;

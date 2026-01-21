@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.ControlSystems;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
+import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.minPower;
 
 public class VoltageCompensator {
     public static VoltageSensor voltageSensor;
@@ -17,6 +18,9 @@ public class VoltageCompensator {
     }
 
     public static double compensateVoltage( double output){
-        return output * (12 / getVoltage());
+        output = output * 12 / getVoltage();
+        output = Math.max(output, minPower);
+
+        return output;
     }
 }

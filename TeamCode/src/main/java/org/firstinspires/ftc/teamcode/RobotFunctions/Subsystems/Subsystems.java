@@ -33,6 +33,11 @@ public class Subsystems {
         feeder.stopFeeder();
     }
 
+    public void startCycling(){
+        intake.moveIntake(1);
+        indexer.moveIndexer(1);
+        feeder.moveFeeder(1);
+    }
     public void stopCycling(){
         intake.stopIntake();
         indexer.stopIndexer();
