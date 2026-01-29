@@ -26,7 +26,6 @@ public class Red_Alliance_TeleOp extends OpMode {
     ChassisController chassis;
     Camera_Detection cameraDetection;
     TelemetryMethods telemetryMethods;
-
     Subsystems subsystems;
 
     // Controller Input
@@ -112,15 +111,11 @@ public class Red_Alliance_TeleOp extends OpMode {
         ////subsystems
 
         if (!autoMode){
-            if (A2 && LSy2 != 0) {
-                subsystems.indexer.moveIndexer(Math.abs(LSy2) > .2 ? LSy2 : 0);
-                subsystems.intake.stopIntake();
-            } else if (X2 && LSy2 != 0) {
-                subsystems.indexer.stopIndexer();
-                subsystems.intake.moveIntake(Math.abs(LSy2) > .2 ? LSy2 : 0);
-            }   else if (LSy2 != 0){
+            if (LSy2 != 0) {
                 subsystems.intake.moveIntake(Math.abs(LSy2) > .2 ? LSy2 : 0);
                 subsystems.indexer.moveIndexer(Math.abs(LSy2) > .2 ? LSy2 : 0);
+            }   else if (RSy2 != 0){
+                subsystems.feeder.moveFeeder(Math.abs(LSy2) > .2 ? LSy2 : 0);
             } else {
                 subsystems.stopCycling();
             }

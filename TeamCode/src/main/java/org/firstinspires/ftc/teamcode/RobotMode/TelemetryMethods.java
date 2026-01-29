@@ -52,8 +52,6 @@ public class TelemetryMethods {
         telemetry.addData("Shooter power", Shooter.getShooterPower(range));
         telemetry.addData("Actual Vel", Shooter.getActualVel());
         telemetry.addData("Revs Needed", Shooter.getDesiredRevs(range));
-        telemetry.addData("LSy1", Blue_Alliance_TeleOp.LSy1);
-        telemetry.addData("RSx1", Blue_Alliance_TeleOp.RSx1);
         telemetry.addData("follow", follow);
         telemetry.addData("Real Power", shooterMotor.getPower());
     }

@@ -35,6 +35,10 @@ public class Shooter {
         shooterMotor.setPower(compensateVoltage(getActualVel() < getDesiredRevs(range) ? .9 : getShooterPower(range)));
     }
 
+    public void shootNow (double power) {
+        shooterMotor.setPower(power);
+    }
+
 
     ///las dos funciones que siguen se necesitan checar, cambie la resolucaión a ver si es eso lo
     /// que hace que tenga un delay
@@ -78,10 +82,9 @@ public class Shooter {
         }
     }
 
+    public void shootArtifacts(double range){
 
-
-
-
+    }
     public void shootAllArtifacts(double cameraDistance){
         double setpointPower = getShooterPower(cameraDistance);
         for (int i=0; i < 2; i++){

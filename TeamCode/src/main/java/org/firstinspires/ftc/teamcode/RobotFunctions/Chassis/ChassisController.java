@@ -14,7 +14,6 @@ import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kFollowD;
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kFollowF;
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kFollowI;
 import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kFollowP;
-import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.power;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -89,8 +88,8 @@ public class ChassisController {
         rearLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rearRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
-//        deadWheelY = topLeft;
-//        deadWheelX = topRight;
+        deadWheelY = topLeft;
+        deadWheelX = topRight;
 
 
         //Initialize IMU
@@ -117,7 +116,7 @@ public class ChassisController {
     public static double getDistanceInchesY(){return getRevsY() * Constants.chassisConst.WHEEL_CIRC_INCH + startPositionY;}
 
     //function that reset encoders
-    public  void resetEncoders() {
+    public void resetEncoders() {
         topLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         topRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rearLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -132,7 +131,7 @@ public class ChassisController {
         rearRight.setPower(0);
     }
     public void chassisFollow(double bearing){
-        mecanumDrive(0,0, pid.calculatePIDF(3.5,bearing, kFollowP, kFollowI, kFollowD, kFollowF));
+        mecanumDrive(0,0, pid.calculatePIDF(3.5,bearing, Constants.chassisConst.FOLLOW_P, kFollowI, kFollowD, kFollowF));
     }
 
 
@@ -299,5 +298,13 @@ public class ChassisController {
         }
 
         mecanumDrive(0,0,0); // Stop driving
+    }
+
+    private void resetOdometryPods(){
+        deadWheelX.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        deadWheelY.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        deadWheelX.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        deadWheelY.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 }
