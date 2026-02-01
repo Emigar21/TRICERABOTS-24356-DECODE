@@ -4,41 +4,21 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class ConfigVariables {
+
+    public static double startPositionX = 0;
+    public static double startPositionY = 0;
+
+    public static double input1 = 0;
+    public static double input2 = 0;
+    public static double input3 = 0;
+
+    public static double output1 = 0;
+    public static double output2 = 0;
+    public static double output3 = 0;
+    // lo mas lejos 5420 daba
+
+    public static double configSpeed = 0;
+
+
     //This values are edited in the Dashboard
-    //Turret Orientation Values
-    //Recommended Camera 0.003
-
-    //Shooter Values
-    public static double power = 0;
-
-    public static double kP = 0;
-    public static double kI = 0;
-
-    public static double kD = 0;
-    public static double kF = 0;
-
-    //Turret values
-    public static double kFollowP = 0;
-    public static double kFollowI = 0;
-
-    public static double kFollowD = 0;
-    public static double kFollowF = 0;
-
-    //Chassis Distance Values
-    public static double kChassisP = 0.0098;
-    //Recommended ??
-    public static double kChassisI = 0.00175;
-    public static double kChassisD = 0;
-    public static double kChassisF = 0.0028;
-
-    //Chassis Angle Values
-    public static double kAngleChassisP = 0.002;
-    public static double kAngleChassisI = 0.0002;
-    public static double kAngleChassisD;
-    public static double kAngleChassisF = 0.004;
-
-    public static double kCompensator = 0;
-
-
-
 }

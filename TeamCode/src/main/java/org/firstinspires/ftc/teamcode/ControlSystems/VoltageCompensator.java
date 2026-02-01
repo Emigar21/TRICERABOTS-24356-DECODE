@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.ControlSystems;
 
-import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.kCompensator;
 import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.AVG_VOLTAGE;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;

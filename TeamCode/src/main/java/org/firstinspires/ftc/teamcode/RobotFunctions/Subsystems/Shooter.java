@@ -1,101 +1,57 @@
 package org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems;
 
-import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.artifactsObelisk;
-import static org.firstinspires.ftc.teamcode.ControlSystems.VoltageCompensator.compensateVoltage;
-import static org.firstinspires.ftc.teamcode.Variables.ConfigVariables.power;
 import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.HDHEX_TICKS_PER_REV;
-import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.maxDist;
-import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.maxVel;
-import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.minDist;
-import static org.firstinspires.ftc.teamcode.Variables.Constants.shooterConst.minVel;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.arcrobotics.ftclib.util.InterpLUT;
 
-import org.firstinspires.ftc.teamcode.RobotFunctions.Sensors;
+import org.firstinspires.ftc.teamcode.Variables.ConfigVariables;
 
-import java.util.Objects;
 
 public class Shooter {
-    public static DcMotorEx shooterMotor;
+    public static DcMotorEx leftShooter;
+    public static DcMotorEx rightShooter;
     public static ElapsedTime timer = new ElapsedTime();
-    public static int actualArtifact = 0;
-
+    InterpLUT controlPoints;
 
     public Shooter(HardwareMap hardwareMap) {
-        shooterMotor = hardwareMap.get(DcMotorEx.class, "shooterMotor");
+        rightShooter = hardwareMap.get(DcMotorEx.class, "rightShooter");
+        leftShooter = hardwareMap.get(DcMotorEx.class,"leftShooter");
 
-        shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightShooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightShooter.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        leftShooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        leftShooter.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        controlPoints = new InterpLUT();
+
+        createControlPoints();
     }
     public void shoot(double range){
-        shooterMotor.setPower(compensateVoltage(getActualVel() < getDesiredRevs(range) ? .9 : getShooterPower(range)));
-    }
-
-    public void shootNow (double power) {
-        shooterMotor.setPower(power);
-    }
-
-
-    ///las dos funciones que siguen se necesitan checar, cambie la resolucaión a ver si es eso lo
-    /// que hace que tenga un delay
-    public static double getShooterPower(double distance) {
-        return compensateVoltage(minVel + (distance - minDist) * ((maxVel - minVel) / (maxDist - minDist)));
-        // formula: velmin + (actdist - min_distance) * ((maxvel - minvel) / (distmax - distmin))
-    }
-
-    public static double getDesiredRevs(double range){
-        return (4290 + (getShooterPower(range) - minVel)*((5350 - 4290)/(maxVel-minVel)));
+        rightShooter.setVelocity(controlPoints.get(range) * HDHEX_TICKS_PER_REV / 60);
+        leftShooter.setVelocity(controlPoints.get(range) * HDHEX_TICKS_PER_REV / 60);
     }
 
     public static double getActualVel(){
-        return (shooterMotor.getVelocity()/HDHEX_TICKS_PER_REV) * 60;
+        return (rightShooter.getVelocity()/HDHEX_TICKS_PER_REV) * 60;
     }
 
-    public void categorizeColor(String actualColor, double cameraDistance) {
-
-        if (Objects.equals(actualColor, artifactsObelisk[actualArtifact])) {
-            timer.reset();
-            while(timer.seconds() < 5){
-                shooterMotor.setPower(0.8);
-            }
-
-            stopShooter();
-            if (actualArtifact == 2){
-                actualArtifact = 0;
-            } else{
-                actualArtifact++;
-            }
-
-        } else if (Sensors.getArtifactColor() != "null" ){
-            timer.reset();
-            while(timer.seconds() < 5) {
-                shooterMotor.setPower(.4);
-            }
-            stopShooter();
-
-        } else {
-            stopShooter();
-        }
-    }
-
-    public void shootArtifacts(double range){
-
-    }
-    public void shootAllArtifacts(double cameraDistance){
-        double setpointPower = getShooterPower(cameraDistance);
-        for (int i=0; i < 2; i++){
-            while (setpointPower < shooterMotor.getPower()) {
-                shooterMotor.setPower(getShooterPower(cameraDistance));
-                setpointPower = getShooterPower(cameraDistance);
-            }
-            shooterMotor.setPower(getShooterPower(cameraDistance));
-        }
+    public static void configShooter() {
+        rightShooter.setVelocity(ConfigVariables.configSpeed);
+        leftShooter.setVelocity(ConfigVariables.configSpeed);
     }
     public void stopShooter(){
-        shooterMotor.setPower(0);
+        rightShooter.setPower(0);
+        leftShooter.setPower(0);
+    }
+
+    public void createControlPoints() {
+        controlPoints.add(75,3060);
+        controlPoints.add(211,4200);
     }
 }

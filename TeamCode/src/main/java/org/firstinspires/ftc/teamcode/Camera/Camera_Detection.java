@@ -47,7 +47,6 @@ public class Camera_Detection{
         YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
                 0, -90, 0, 0);
         // Set the position of the camera in the robot
-        /// (esto hay que cambiarlo, está al lado, no en el centro)
         Position cameraPosition = new Position(DistanceUnit.INCH,
                 0, 0, 0, 0);
         detectionProcessor = new AprilTagProcessor.Builder()
@@ -132,26 +131,6 @@ public class Camera_Detection{
                 }
             }
             detection = true;
-        }
-    }
-
-    public static String[] artifactsObelisk = new String[3];
-
-
-
-    public void getObelisk(){
-        if (id == 21){
-            artifactsObelisk[0] = "green";
-            artifactsObelisk[1] = "purple";
-            artifactsObelisk[2] = "purple";
-        } else if (id == 22) {
-            artifactsObelisk[0] = "purple";
-            artifactsObelisk[1] = "green";
-            artifactsObelisk[2] = "purple";
-        } else if (id == 23) {
-            artifactsObelisk[0] = "purple";
-            artifactsObelisk[1] = "purple";
-            artifactsObelisk[2] = "green";
         }
     }
 }

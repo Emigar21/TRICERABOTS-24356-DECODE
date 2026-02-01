@@ -15,11 +15,7 @@ public class Feeder {
         feederMotor.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
-    public void moveFeeder(double power){
-        feederMotor.setPower(power);
-    }
+    public void moveFeeder(double power){ feederMotor.setPower(power); }
 
-    public void stopFeeder(){
-        feederMotor.setPower(0);
-    }
+    public void stopFeeder(){ feederMotor.setPower(0); }
 }

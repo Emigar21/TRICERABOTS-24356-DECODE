@@ -41,5 +41,6 @@ public class Subsystems {
     public void stopCycling(){
         intake.stopIntake();
         indexer.stopIndexer();
+        feeder.stopFeeder();
     }
 }

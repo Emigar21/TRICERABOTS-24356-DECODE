@@ -1,24 +1,19 @@
 package org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems;
-
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+
+
 public class Indexer {
-    public static DcMotorEx indexerMotor;
+    public static CRServo indexerServo;
     public Indexer (HardwareMap hardwareMap){
-        indexerMotor = hardwareMap.get(DcMotorEx.class,"indexerMotor");
+        indexerServo = hardwareMap.get(CRServo.class,"indexerServo");
 
-        indexerMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        indexerMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        indexerServo.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
-    public void moveIndexer (double power){
-        indexerMotor.setPower(power);
-    }
+    public void moveIndexer (double power){ indexerServo.setPower(power); }
 
-    public void stopIndexer(){
-        indexerMotor.setPower(0);
-    }
+    public void stopIndexer(){ indexerServo.setPower(0); }
 }

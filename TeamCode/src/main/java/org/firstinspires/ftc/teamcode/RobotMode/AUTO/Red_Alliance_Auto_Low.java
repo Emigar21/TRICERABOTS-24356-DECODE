@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotMode.AUTO;
 
 import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.range;
-import static org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter.getActualVel;
-import static org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter.getDesiredRevs;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -15,6 +13,7 @@ import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Subsystems;
 import org.firstinspires.ftc.teamcode.RobotMode.TelemetryMethods;
 
 @Autonomous(name="Red Auto Low", group="red")
+
 public class Red_Alliance_Auto_Low extends LinearOpMode {
     ChassisController chassis;
     Subsystems subsystems;
@@ -22,6 +21,7 @@ public class Red_Alliance_Auto_Low extends LinearOpMode {
     Camera_Detection cameraDetection;
     TelemetryMethods telemetryMethods;
     ElapsedTime timer;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -45,9 +45,9 @@ public class Red_Alliance_Auto_Low extends LinearOpMode {
         while(timer.seconds() < 6.3){ // Shoot all artifacts
             cameraDetection.CameraDetectionRed();
             subsystems.shooter.shoot(range);
-            subsystems.intake.moveIntake(getActualVel() < getDesiredRevs(range) ? 0 : 1);
-            subsystems.indexer.moveIndexer(getActualVel() < getDesiredRevs(range) ? 0 : 1);
-            subsystems.feeder.moveFeeder(getActualVel() < getDesiredRevs(range) ? 0 : 1);
+//            subsystems.intake.moveIntake(getActualVel() < getDesiredRevs(range) ? 0 : 1);
+//            subsystems.indexer.moveIndexer(getActualVel() < getDesiredRevs(range) ? 0 : 1);
+//            subsystems.feeder.moveFeeder(getActualVel() < getDesiredRevs(range) ? 0 : 1);
         }
 
         subsystems.stopAllSubMotors();
@@ -77,9 +77,9 @@ public class Red_Alliance_Auto_Low extends LinearOpMode {
         while(timer.seconds() < 7){ // Shoot all artifacts
             cameraDetection.CameraDetectionRed();
             subsystems.shooter.shoot(range);
-            subsystems.intake.moveIntake(getActualVel() < getDesiredRevs(range) ? 0 : 1);
-            subsystems.indexer.moveIndexer(getActualVel() < getDesiredRevs(range) ? 0 : 1);
-            subsystems.feeder.moveFeeder(getActualVel() < getDesiredRevs(range) ? 0 : 1);
+//            subsystems.intake.moveIntake(getActualVel() < getDesiredRevs(range) ? 0 : 1);
+//            subsystems.indexer.moveIndexer(getActualVel() < getDesiredRevs(range) ? 0 : 1);
+//            subsystems.feeder.moveFeeder(getActualVel() < getDesiredRevs(range) ? 0 : 1);
         }
     }
 }
