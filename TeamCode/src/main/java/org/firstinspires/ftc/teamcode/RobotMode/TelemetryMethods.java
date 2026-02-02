@@ -12,28 +12,33 @@ import org.firstinspires.ftc.teamcode.RobotFunctions.Sensors;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter;
 
 public class TelemetryMethods {
-    PID pid = new PID();
+    Telemetry telemetry;
 
     public void InitTelemetry(Telemetry telemetry){
+        this.telemetry = telemetry;
+
         telemetry.addLine("Processors updated");
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
         telemetry.addData(">", "Touch START to start Autonomous");
         telemetry.addLine();
         telemetry.update();
     }
-    public void TelemetryUpdateCamera(Telemetry telemetry) {
+    public void TelemetryUpdateCamera() {
         //Giving the telemetry for the FTC Dashboard (the PC "Driver Station")
         // from the array of CameraDetection
         telemetry.addLine();
         telemetry.addData("Bearing ", bearing);
         telemetry.addData("April Tag ", id);
         telemetry.addData("range", range);
+        telemetry.addLine();
         telemetry.addData("Inches in X", ChassisController.getDistanceInchesX());
         telemetry.addData("Inches in Y", ChassisController.getDistanceInchesY());
-        telemetry.addData("TopLeft Vel", ChassisController.topLeft.getVelocity());
-        telemetry.addData("TopRight Vel", ChassisController.topRight.getVelocity());
-        telemetry.addData("RearLeft Vel", ChassisController.rearLeft.getVelocity());
-        telemetry.addData("RearRight Vel", ChassisController.rearRight.getVelocity());
+        telemetry.addData("Error X", 15 - ChassisController.getDistanceInchesX());
+        telemetry.addData("Error Y", 15 - ChassisController.getDistanceInchesY());
+        telemetry.addData("Setpoint X", 15);
+        telemetry.addData("Setpoint Y", 15);
+        telemetry.addData("angle", ChassisController.imu.getRobotYawPitchRollAngles().getYaw());
+        telemetry.addData("turnError", ChassisController.turnError);
         telemetry.update();
     }
 
@@ -42,7 +47,13 @@ public class TelemetryMethods {
         telemetry.update();
     }
 
-    public void telemetrySensors(Telemetry telemetry){
-        telemetry.addData("Color", Sensors.getColor());
+    public void odometryTelemetry(Telemetry telemetry){
+        telemetry.addData("Inches in X", ChassisController.getDistanceInchesX());
+        telemetry.addData("Inches in Y", ChassisController.getDistanceInchesY());
+        telemetry.addData("Error X", 15 - ChassisController.getDistanceInchesX());
+        telemetry.addData("Error Y", 15 - ChassisController.getDistanceInchesY());
+        telemetry.addData("Setpoint X", 15);
+        telemetry.addData("Setpoint Y", 15);
+        telemetry.update();
     }
 }

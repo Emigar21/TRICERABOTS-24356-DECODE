@@ -11,13 +11,13 @@ import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Subsystems;
 import org.firstinspires.ftc.teamcode.RobotMode.Dashboard;
 import org.firstinspires.ftc.teamcode.RobotMode.TelemetryMethods;
 
-@Autonomous(name="Testeo odometria", group="neutral")
+@Autonomous(name="Testeo odometria", group="Testing")
 public class OdometryTesting extends LinearOpMode {
     ChassisController chassis;
     Subsystems subsystems;
     Sensors sensors;
     Camera_Detection cameraDetection;
-    TelemetryMethods telemetryMethods;
+    public static TelemetryMethods telemetryMethods;
     Dashboard dashboard;
     ElapsedTime timer;
 
@@ -38,14 +38,10 @@ public class OdometryTesting extends LinearOpMode {
 
         waitForStart(); // Auto Start
 
-        telemetryMethods.TelemetryUpdateCamera(telemetry);
+        telemetryMethods.TelemetryUpdateCamera();
         Dashboard.initDashboard(ChassisController.getDistanceInchesX(),ChassisController.getDistanceInchesY(),0,15);
 
-            telemetryMethods.TelemetryUpdateCamera(telemetry);
-            chassis.AutoMovement(-15, -15, 0);
-            sleep(1000);
-            chassis.AutoMovement(5, 0, 0);
-
+        chassis.AutoTurn(45);
     }
 }
 

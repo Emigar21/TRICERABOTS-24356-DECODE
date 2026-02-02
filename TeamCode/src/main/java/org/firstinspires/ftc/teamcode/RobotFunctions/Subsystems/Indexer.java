@@ -10,7 +10,7 @@ public class Indexer {
     public Indexer (HardwareMap hardwareMap){
         indexerServo = hardwareMap.get(CRServo.class,"indexerServo");
 
-        indexerServo.setDirection(DcMotorSimple.Direction.REVERSE);
+        indexerServo.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
     public void moveIndexer (double power){ indexerServo.setPower(power); }

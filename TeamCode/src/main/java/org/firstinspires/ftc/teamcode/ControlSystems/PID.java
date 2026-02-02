@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.ControlSystems;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Variables.ConfigVariables;
+import org.firstinspires.ftc.teamcode.Variables.Constants;
 
 public class PID {
     public static double error;
@@ -35,38 +37,10 @@ public class PID {
         //Get the motor output
         return (kP * error) + (kI * sumError) + (kD * derivative) + (kF * setPoint);
     }
-
-
-
-    double prevOrientationError = 0;
-    double sumOrientationError;
-    double orientationSaturation;
-    double orientationDerivative;
     ElapsedTime orientationTimer = new ElapsedTime();
-   public static double errorAngle;
-    public double calculateAngleChassisPID(double setPoint, double actualOrientation, double kOrientationP, double kOrientationI, double kOrientationD, double kOrientationF){
+    public double calculateAngleChassisPID(double setPoint, double actualOrientation){
         //set the Proportional calculation
-        errorAngle = setPoint - actualOrientation;
-
-        //Make a condition so there is not saturation on the Integral calculation
-        orientationSaturation = errorAngle - prevOrientationError;
-        if(Math.abs(orientationSaturation) < -.1){
-            //Calculate the integral sum
-            sumOrientationError += errorAngle * orientationTimer.seconds();
-        }
-
-        //Calculate the derivative
-        orientationDerivative = (errorAngle - prevOrientationError)/orientationTimer.seconds();
-
-        //Get the last error
-        prevOrientationError = errorAngle;
-
-        //Reset timer
-        orientationTimer.reset();
-
-        //Get the motor output
-
-        return  (kOrientationP * errorAngle) + (kOrientationI * sumOrientationError) + (kOrientationD * orientationDerivative) + (setPoint * kOrientationF);
+       return calculatePIDF(setPoint,actualOrientation, Constants.chassisConst.TURN_P, Constants.chassisConst.TURN_I, Constants.chassisConst.TURN_D, Constants.chassisConst.TURN_F);
     }
     //Function that help us go to the nearest path for orientation
     public static double angleWrap(double angle) {

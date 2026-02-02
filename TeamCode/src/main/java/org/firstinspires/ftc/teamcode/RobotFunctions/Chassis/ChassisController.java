@@ -6,12 +6,14 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.ControlSystems.PID;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Indexer;
+import org.firstinspires.ftc.teamcode.RobotMode.AUTO.OdometryTesting;
 import org.firstinspires.ftc.teamcode.RobotMode.TelemetryMethods;
 import org.firstinspires.ftc.teamcode.Variables.ConfigVariables;
 import org.firstinspires.ftc.teamcode.Variables.Constants;
@@ -32,7 +34,7 @@ public class ChassisController {
 
     ///Initialize IMU
 
-    IMU imu;
+    public static IMU imu;
     PID pid;
 
     ///Initialize variables
@@ -41,11 +43,13 @@ public class ChassisController {
     /// initialize auto variables
     public static double errorX;
     public static double errorY;
+    public static double turnError;
     public static double errorHyp;
     public static double initialPositionX;
     public static double initialPositionY;
     public static double currentDistanceX;
     public static double currentDistanceY;
+    public static double currentAngle;
     public ChassisController(HardwareMap hardwareMap) {
 
         //Initialize motors
@@ -65,22 +69,20 @@ public class ChassisController {
         currentDistanceY = getDistanceInchesY();
 
 
-
         //Initialize IMU
 
         imu = hardwareMap.get(IMU.class, "imu");
 
         IMU.Parameters imuParameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD,
-                RevHubOrientationOnRobot.UsbFacingDirection.RIGHT));
+                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
+                RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD));
         imu.initialize(imuParameters);
         imu.resetYaw();
+
+        pid = new PID();
     }
 
     public void mecanumDrive(double X, double Y, double turn) {
-
-        turn *= -1;
-
         double power = Math.hypot(X, Y);
         double theta = Math.atan2(Y, X); //create the angle of the robot that we want to move
         double sin = Math.sin(theta - Math.PI / 4); //create the sin of the angle
@@ -92,6 +94,10 @@ public class ChassisController {
         topRight.setPower(power * sin / max - turn); //set the power of the motors
         rearLeft.setPower(power * sin / max + turn); //set the power of the motors
         rearRight.setPower(power * cos / max - turn); //set the power of the motors
+    }
+    public void mecanumFollow(double setpointAngle) {
+        currentAngle = imu.getRobotYawPitchRollAngles().getYaw();
+        mecanumDrive(0,0,pid.calculateAngleChassisPID(setpointAngle, currentAngle));
     }
 
     public void slowMode(double X, double Y, double turn) {
@@ -111,36 +117,11 @@ public class ChassisController {
 
     }
 
-    public void AutoMovement(double setPointX, double setPointY, double desiredAngle) {
-        errorX = setPointX - currentDistanceX;
-        errorY = setPointY - currentDistanceY;
-
-        initialPositionX = getDistanceInchesX();
-        initialPositionY = getDistanceInchesY();
-
-        while (Math.abs(errorX) > .5 || Math.abs(errorY) > .5) {
-            errorX = setPointX - currentDistanceX;
-            errorY = setPointY - currentDistanceY;
-
-            double power = Math.hypot(errorX, errorY);
-            double theta = Math.atan2(setPointY, setPointX); //create the angle of the robot that we want to move
-            double sin = Math.sin(theta - Math.PI  / 4); //create the sin of the angle
-            double cos = Math.cos(theta - Math.PI / 4); //create the cos of the angle
-            double max = Math.max(Math.abs(sin), Math.abs(cos)); //create the max of the sin and the cos
-            //double turn = pid.calculateAngleChassisPID(orientation, imu.getRobotYawPitchRollAngles().getYaw());
-
-            topLeft.setPower((power * cos / max + desiredAngle) *.1); //set the power of the motors
-            topRight.setPower((power * sin / max - desiredAngle) *.1); //set the power of the motors
-            rearLeft.setPower((power * sin / max + desiredAngle) * .1); //set the power of the motors
-            rearRight.setPower((power * cos / max - desiredAngle) * .1); //set the power of the motors
-        }
-    }
-
-    /// Autonomous section
-
+    /// Autonomous section --------------------------------------
+    ///
     //functions that give the current position in ticks
-    public static double getTicksX(){return -deadWheelX.getCurrentPosition();}
-    public static double getTicksY() {return deadWheelY.getCurrentPosition();}
+    public static double getTicksX(){return deadWheelX.getCurrentPosition();}
+    public static double getTicksY() {return -deadWheelY.getCurrentPosition();}
 
     //functions that give the current revolutions
     public static double getRevsX() {return getTicksX() / Constants.chassisConst.TICKS_PER_REV;}
@@ -149,6 +130,71 @@ public class ChassisController {
     //functions that give the current distance in inches
     public static double getDistanceInchesX(){return getRevsX() * Constants.chassisConst.WHEEL_CIRC_INCH + ConfigVariables.startPositionX;}
     public static double getDistanceInchesY(){return getRevsY() * Constants.chassisConst.WHEEL_CIRC_INCH + ConfigVariables.startPositionY;}
+
+    public void AutoMovement(double setPointX, double setPointY, double desiredAngle) {
+        resetEncoders();
+
+        // Save the robot´s starting position
+
+        initialPositionX = currentDistanceX;
+        initialPositionY = currentDistanceY;
+
+        // Calculate initial error
+
+        errorX = setPointX - currentDistanceX;
+        errorY = setPointY - currentDistanceY;
+
+        while (Math.abs(errorX) > 1 || Math.abs(errorY) > 1) {
+            currentDistanceX = getDistanceInchesX();
+            currentDistanceY = getDistanceInchesY();
+
+            errorX = setPointX - currentDistanceX;
+            errorY = setPointY - currentDistanceY;
+
+            double power = Math.hypot(errorX, errorY);
+            double theta = Math.atan2(errorY, errorX); //create the angle of the robot that we want to move
+            double sin = Math.sin(theta - Math.PI  / 4); //create the sin of the angle
+            double cos = Math.cos(theta - Math.PI / 4); //create the cos of the angle
+            double max = Math.max(Math.abs(sin), Math.abs(cos)); //create the max of the sin and the cos
+            double turn = pid.calculateAngleChassisPID(desiredAngle, imu.getRobotYawPitchRollAngles().getYaw());
+
+
+            topLeft.setPower((power * cos / max + turn) * .1); //set the power of the motors
+            topRight.setPower((power * sin / max - turn) * .1); //set the power of the motors
+            rearLeft.setPower((power * sin / max + turn) * .1); //set the power of the motors
+            rearRight.setPower((power * cos / max - turn) * .1); //set the power of the motors
+
+            OdometryTesting.telemetryMethods.TelemetryUpdateCamera();
+        }
+
+        stopChassis();
+    }
+
+    public void AutoTurn(double desiredAngle) {
+        resetEncoders();
+
+        // Calculate initial error
+        currentAngle = imu.getRobotYawPitchRollAngles().getYaw();
+        turnError = desiredAngle - currentAngle;
+
+        timer.reset();
+
+        while (Math.abs(turnError) > .2 && timer.seconds() < 4) {
+            currentAngle = imu.getRobotYawPitchRollAngles().getYaw();
+            turnError = desiredAngle - currentAngle;
+
+            double turn = pid.calculateAngleChassisPID(desiredAngle, currentAngle);
+
+            topLeft.setPower(turn); //set the power of the motors
+            topRight.setPower((-turn)); //set the power of the motors
+            rearLeft.setPower(turn); //set the power of the motors
+            rearRight.setPower((-turn)); //set the power of the motors
+
+            OdometryTesting.telemetryMethods.TelemetryUpdateCamera();
+        }
+
+        stopChassis();
+    }
 
     ///this one we have to check it!!
 //    public void chassisFollow(double bearing){
@@ -180,10 +226,10 @@ public class ChassisController {
     private void configMotors(){
 
         //set motor directions
-        topLeft.setDirection(DcMotorEx.Direction.FORWARD);
-        topRight.setDirection(DcMotorEx.Direction.REVERSE);
-        rearLeft.setDirection(DcMotorEx.Direction.FORWARD);
-        rearRight.setDirection(DcMotorEx.Direction.REVERSE);
+        topLeft.setDirection(DcMotorEx.Direction.REVERSE);
+        topRight.setDirection(DcMotorEx.Direction.FORWARD);
+        rearLeft.setDirection(DcMotorEx.Direction.REVERSE);
+        rearRight.setDirection(DcMotorEx.Direction.FORWARD);
 
         //set zero power behavior
         topLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -198,8 +244,11 @@ public class ChassisController {
     }
 
     private void resetEncoders() {
-        topRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         topLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        topRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        topLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        topRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void stopChassis() {

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.RobotFunctions.Sensors;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Subsystems;
 import org.firstinspires.ftc.teamcode.RobotMode.TelemetryMethods;
 
-@Autonomous(name="Leave Auto", group="neutral")
+@Autonomous(name="Leave Auto", group="Neutral")
 public class Leave_Auto extends LinearOpMode {
     ChassisController chassis;
     Subsystems subsystems;

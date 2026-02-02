@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.RobotMode.TELEOP;
 
 import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.bearing;
 import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.range;
-import static org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter.configShooter;
 import static org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter.getActualVel;
 import static org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter.timer;
 import static org.firstinspires.ftc.teamcode.RobotMode.Dashboard.dashboardTelemetry;
@@ -72,7 +71,7 @@ public class Red_Alliance_TeleOp extends OpMode {
         Dashboard.initDashboard(1, 1,10,10);
 
         telemetryMethods.TelemetryShooter(telemetry);
-        telemetryMethods.TelemetryUpdateCamera(telemetry);
+        telemetryMethods.TelemetryUpdateCamera();
 
         cameraDetection.CameraDetectionRed();
         ftcDashboard.sendImage(cameraDetection.streamProcessor.getLastFrame());
@@ -139,13 +138,14 @@ public class Red_Alliance_TeleOp extends OpMode {
             subsystems.shooter.stopShooter();
         }
 
-        if (LT2 != 0) { configShooter(); }
+        if (LT2 != 0) { subsystems.shooter.configShooter(); }
     }
     public void updateControllerInput(){
+
         RT1 = gamepad1.right_trigger;
         LT1 = gamepad1.left_trigger;
-        LSx1 = -gamepad1.left_stick_x;
-        LSy1 = gamepad1.left_stick_y;
+        LSx1 = gamepad1.left_stick_x;
+        LSy1 = -gamepad1.left_stick_y;
         RSx1 = gamepad1.right_stick_x;
         RSy1 = gamepad1.right_stick_y;
         LB1 = gamepad1.left_bumper;
