@@ -144,7 +144,9 @@ public class ChassisController {
         errorX = setPointX - currentDistanceX;
         errorY = setPointY - currentDistanceY;
 
-        while (Math.abs(errorX) > 1 || Math.abs(errorY) > 1) {
+        timer.reset();
+
+        while ((Math.abs(errorX) > 1 || Math.abs(errorY) > 1) && timer.seconds() < 3) {
             currentDistanceX = getDistanceInchesX();
             currentDistanceY = getDistanceInchesY();
 
@@ -179,7 +181,7 @@ public class ChassisController {
 
         timer.reset();
 
-        while (Math.abs(turnError) > .2 && timer.seconds() < 4) {
+        while (Math.abs(turnError) > .2 && timer.seconds() < 1.5) {
             currentAngle = imu.getRobotYawPitchRollAngles().getYaw();
             turnError = desiredAngle - currentAngle;
 

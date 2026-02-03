@@ -117,16 +117,16 @@ public class Blue_Alliance_TeleOp extends OpMode {
             }
         }
 
-//        if (RT2 != 0) {
-//            autoMode = true;
-//            subsystems.shooter.shoot(range);
-//            subsystems.intake.moveIntake(Shooter.getActualVel() >= (Shooter.controlPoints.get(range) - 400) ? 1 : 0);
-//            subsystems.indexer.moveIndexer(Shooter.getActualVel() >= (Shooter.controlPoints.get(range) - 400) ? 1 : 0);
-//            subsystems.feeder.moveFeeder(Shooter.getActualVel() >= (Shooter.controlPoints.get(range) - 400) ? 1 : 0);
-//        } else {
-//            autoMode = false;
-//            subsystems.shooter.stopShooter();
-//        }
+        if (RT2 != 0) {
+            autoMode = true;
+            subsystems.shooter.shoot(range);
+            subsystems.intake.moveIntake(Shooter.getActualVel() >= (Shooter.controlPoints.get(range) - 400) ? 1 : 0);
+            subsystems.indexer.moveIndexer(Shooter.getActualVel() >= (Shooter.controlPoints.get(range) - 400) ? 1 : 0);
+            subsystems.feeder.moveFeeder(Shooter.getActualVel() >= (Shooter.controlPoints.get(range) - 400) ? 1 : 0);
+        } else {
+            autoMode = false;
+            subsystems.shooter.stopShooter();
+        }
 
         if (LT2 != 0) {
             subsystems.shooter.configShooter();
