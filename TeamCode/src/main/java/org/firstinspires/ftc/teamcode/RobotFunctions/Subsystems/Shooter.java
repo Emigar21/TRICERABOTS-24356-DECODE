@@ -42,8 +42,13 @@ public class Shooter {
         createControlPoints();
     }
     public void shoot(double range){
-        rightShooter.setVelocity(controlPoints.get(range));
-        leftShooter.setVelocity(controlPoints.get(range));
+        if(range < Constants.shooterConst.MIN_DISTANCE || range > Constants.shooterConst.MAX_DISTANCE){
+            rightShooter.setVelocity(4000);
+            leftShooter.setVelocity(4000);
+        } else {
+            rightShooter.setVelocity(controlPoints.get(range));
+            leftShooter.setVelocity(controlPoints.get(range));
+        }
     }
 
     public  void configShooter() {
@@ -59,13 +64,13 @@ public class Shooter {
     }
 
     public void createControlPoints() {
-        controlPoints.add(66,3400);
+        controlPoints.add(Constants.shooterConst.MIN_DISTANCE,3400);
         controlPoints.add(116,3700);
-        controlPoints.add(161,4000);
-        controlPoints.add(197,4480);
-        controlPoints.add(215,5150);
-        controlPoints.add(267,5200); // Recalibrate
-        controlPoints.add(320,5650);
+        controlPoints.add(161,4120);
+        controlPoints.add(197,4450);
+        controlPoints.add(215,4910);
+        controlPoints.add(267,5150);
+        controlPoints.add(Constants.shooterConst.MAX_DISTANCE,5650);
 
         controlPoints.createLUT();
     }

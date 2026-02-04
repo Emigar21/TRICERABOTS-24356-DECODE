@@ -10,10 +10,10 @@ public class ConfigVariables {
 
     public static double configSpeed = 0;
 
-    public static double kP = 0;
-    public static double kI = 0;
-    public static double kD = 0;
-    public static double kF = 0;
+    public static double CHASSIS_P = 0;
+    public static double CHASSIS_I = 0;
+    public static double CHASSIS_D = 0;
+    public static double CHASSIS_F = 0;
     public static double kShooterP = 0;
     public static double kShooterF = 0;
 

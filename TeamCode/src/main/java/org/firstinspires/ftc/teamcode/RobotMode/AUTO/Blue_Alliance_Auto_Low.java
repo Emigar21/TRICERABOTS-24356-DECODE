@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.RobotFunctions.Sensors;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Subsystems;
 import org.firstinspires.ftc.teamcode.RobotMode.TelemetryMethods;
 
-@Autonomous(name="Blue Auto Low", group="blue")
+@Autonomous(name="Blue Auto Low", group="Blue")
 public class Blue_Alliance_Auto_Low extends LinearOpMode {
     ChassisController chassis;
     Subsystems subsystems;

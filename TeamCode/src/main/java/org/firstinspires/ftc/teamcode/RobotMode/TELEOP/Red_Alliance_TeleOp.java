@@ -13,11 +13,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Camera.Camera_Detection;
+import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Subsystems;
 import org.firstinspires.ftc.teamcode.RobotMode.Dashboard;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Chassis.ChassisController;
 
 import org.firstinspires.ftc.teamcode.RobotMode.TelemetryMethods;
+import org.firstinspires.ftc.teamcode.Variables.Constants;
 
 @TeleOp(name="RedTeleOp",group="TeleOps")
 public class Red_Alliance_TeleOp extends OpMode {
@@ -76,37 +78,25 @@ public class Red_Alliance_TeleOp extends OpMode {
         cameraDetection.CameraDetectionRed();
         ftcDashboard.sendImage(cameraDetection.streamProcessor.getLastFrame());
 
-        if(B1){
-            chassis.stopChassis();
-        }  else if(X1) {
-            timer.reset();
-            follow = !follow;
-            while (timer.seconds()< .1){
-//                chassis.chassisFollow(bearing);
-            }
-        } else if(follow){
-//            chassis.chassisFollow(bearing);
-        } else if (Math.abs(LSx1) > .2 || Math.abs(LSy1) > .2 || Math.abs(RSx1) > .2 ){
-            chassis.mecanumDrive(
-                    LB1 ? LSx1 * .3  : LSx1  ,
-                    LB1 ? LSy1 * .3 : LSy1 ,
-                    LB1 ? RSx1 * .3 : RSx1
-            );
-        }
-
-        ////chassis
+        //// Chassis
 
         if (RB1) {
             isSlowActive = true;
         } else if (LB1) {
             isSlowActive = false;
+        } else if (gamepad1.xWasPressed()){
+            follow = !follow;
         }
-        if (isSlowActive)
+
+        if(follow){
+            chassis.mecanumFollow(bearing);
+        } else if(isSlowActive){
             chassis.slowMode(LSx1, LSy1, RSx1);
-        else {
+        } else {
             chassis.mecanumDrive(LSx1, LSy1, RSx1);
         }
-        ////subsystems
+
+        //// Subsystems
 
         if (!autoMode){
             if (LSy2 != 0) {
@@ -129,16 +119,26 @@ public class Red_Alliance_TeleOp extends OpMode {
 
         if (RT2 != 0) {
             autoMode = true;
-            subsystems.shooter.shoot(range);
-//            subsystems.intake.moveIntake(getActualVel() < getDesiredRevs(range) ? 0 : 1);
-//            subsystems.indexer.moveIndexer(getActualVel() < getDesiredRevs(range) ? 0 : 1);
-//            subsystems.feeder.moveFeeder(getActualVel() < getDesiredRevs(range) ? 0 : 1);
+
+            if(range < Constants.shooterConst.MIN_DISTANCE || range > Constants.shooterConst.MAX_DISTANCE){
+                subsystems.shooter.shoot(range);
+            } else {
+                subsystems.shooter.shoot(range);
+                subsystems.intake.moveIntake(Shooter.getActualVel() >= (Shooter.controlPoints.get(range) - 400) ? 1 : 0);
+                subsystems.indexer.moveIndexer(Shooter.getActualVel() >= (Shooter.controlPoints.get(range) - 400) ? 1 : 0);
+                subsystems.feeder.moveFeeder(Shooter.getActualVel() >= (Shooter.controlPoints.get(range) - 400) ? 1 : 0);
+            }
         } else {
             autoMode = false;
             subsystems.shooter.stopShooter();
         }
 
-        if (LT2 != 0) { subsystems.shooter.configShooter(); }
+        if (LT2 != 0) {
+            subsystems.shooter.configShooter();
+        } else {
+            subsystems.shooter.stopShooter();
+        }
+
     }
     public void updateControllerInput(){
 

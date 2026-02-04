@@ -1,0 +1,98 @@
+package org.firstinspires.ftc.teamcode.RobotMode.AUTO;
+
+import static org.firstinspires.ftc.teamcode.Camera.Camera_Detection.range;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.Camera.Camera_Detection;
+import org.firstinspires.ftc.teamcode.RobotFunctions.Chassis.ChassisController;
+import org.firstinspires.ftc.teamcode.RobotFunctions.Sensors;
+import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Subsystems;
+import org.firstinspires.ftc.teamcode.RobotMode.Dashboard;
+import org.firstinspires.ftc.teamcode.RobotMode.TelemetryMethods;
+
+@Autonomous(name="Blue Auto Close", group="Blue")
+public class Blue_Auto_Close extends LinearOpMode {
+    ChassisController chassis;
+    Subsystems subsystems;
+    Sensors sensors;
+    Camera_Detection cameraDetection;
+    public static TelemetryMethods telemetryMethods;
+    Dashboard dashboard;
+    ElapsedTime timer;
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+        chassis = new ChassisController(hardwareMap);
+        subsystems = new Subsystems(hardwareMap);
+
+        sensors = new Sensors(hardwareMap);
+        cameraDetection = new Camera_Detection(hardwareMap);
+        dashboard = new Dashboard();
+
+        telemetryMethods = new TelemetryMethods();
+
+        timer = new ElapsedTime();
+
+        telemetryMethods.InitTelemetry(telemetry);
+        cameraDetection.CameraDetectionBlue();
+
+        waitForStart(); // Auto Start
+
+        telemetryMethods.TelemetryUpdateCamera();
+        Dashboard.initDashboard(ChassisController.getDistanceInchesX(), ChassisController.getDistanceInchesY(), 0, 15);
+
+        subsystems.shooter.shoot(80);
+        chassis.AutoMovement(0, -30, 0); // Move back to shoot
+        chassis.AutoTurn(0);
+
+        cameraDetection.CameraDetectionBlue();
+
+        timer.reset();
+        while (timer.seconds() < 5) { // Shoot all 3 artifacts
+            cameraDetection.CameraDetectionBlue();
+
+            subsystems.shooter.shoot(range);
+
+            if (timer.seconds() > 2) {
+                subsystems.startCycling();
+            }
+        }
+
+        subsystems.stopCycling();
+        chassis.AutoTurn(35); // Turn towards artifacts
+        chassis.AutoMovement(-20, 0, 35);
+        timer.reset();
+
+        timer.reset();
+        while (timer.seconds() < 2) { // Pick up first artifact row
+            subsystems.intake.moveIntake(1);
+            subsystems.indexer.moveIndexer(1);
+            subsystems.feeder.moveFeeder(.16);
+            chassis.AutoMovement(0, 27, 35);
+        }
+
+        subsystems.stopCycling();
+        chassis.AutoMovement(-12,-6,35); // Move towards gate
+        chassis.AutoMovement(0,8.4,35); // Open gate
+
+        chassis.AutoMovement(36, -30, 35); // Move back to launch zone
+
+        chassis.AutoTurn(0);
+
+        timer.reset();
+        while (timer.seconds() < 5) { // Shoot all 3 artifacts
+            cameraDetection.CameraDetectionBlue();
+
+            subsystems.shooter.shoot(range);
+
+            if (timer.seconds() > 2) {
+                subsystems.startCycling();
+            }
+        }
+    }
+}
+

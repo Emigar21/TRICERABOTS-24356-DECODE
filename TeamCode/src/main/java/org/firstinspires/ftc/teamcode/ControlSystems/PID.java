@@ -42,6 +42,9 @@ public class PID {
         //set the Proportional calculation
        return calculatePIDF(setPoint,actualOrientation, Constants.chassisConst.TURN_P, Constants.chassisConst.TURN_I, Constants.chassisConst.TURN_D, Constants.chassisConst.TURN_F);
     }
+    public double calculateChassisMovementPID(double setpoint, double currentState){
+        return calculatePIDF(setpoint,currentState, ConfigVariables.CHASSIS_P, ConfigVariables.CHASSIS_I, ConfigVariables.CHASSIS_D, ConfigVariables.CHASSIS_F);
+    }
     //Function that help us go to the nearest path for orientation
     public static double angleWrap(double angle) {
         while (angle < -179){

@@ -14,8 +14,8 @@ import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Subsystems;
 import org.firstinspires.ftc.teamcode.RobotMode.Dashboard;
 import org.firstinspires.ftc.teamcode.RobotMode.TelemetryMethods;
 
-@Autonomous(name="Testeo odometria", group="Testing")
-public class OdometryTesting extends LinearOpMode {
+@Autonomous(name="Red Auto Close", group="Blue")
+public class Red_Auto_Close extends LinearOpMode {
     ChassisController chassis;
     Subsystems subsystems;
     Sensors sensors;
@@ -43,9 +43,55 @@ public class OdometryTesting extends LinearOpMode {
         waitForStart(); // Auto Start
 
         telemetryMethods.TelemetryUpdateCamera();
-        Dashboard.initDashboard(ChassisController.getDistanceInchesX(),ChassisController.getDistanceInchesY(),0,15);
+        Dashboard.initDashboard(ChassisController.getDistanceInchesX(), ChassisController.getDistanceInchesY(), 0, 15);
 
-        chassis.AutoMovement(40,0,0);
+        chassis.AutoTurn(0);
+        chassis.AutoMovement(0, -30, 0); // Move back to shoot
+
+        cameraDetection.CameraDetectionBlue();
+
+//        sleep();
+
+        timer.reset();
+        while (timer.seconds() < 5) { // Shoot all 3 artifacts
+            cameraDetection.CameraDetectionBlue();
+
+            subsystems.shooter.shoot(range);
+
+            if (timer.seconds() > 2) {
+                subsystems.startCycling();
+            }
+        }
+
+        subsystems.stopAllSubMotors();
+        chassis.AutoTurn(-35); // Turn towards artifacts
+        chassis.AutoMovement(42, 0, -35);
+        timer.reset();
+
+        timer.reset();
+        while (timer.seconds() < 3) {
+            subsystems.intake.moveIntake(1);
+            subsystems.indexer.moveIndexer(1);
+            subsystems.feeder.moveFeeder(.1);
+            chassis.AutoMovement(0, 36, -35);
+        }
+
+        subsystems.stopAllSubMotors();
+        chassis.AutoMovement(0, -37, -35);
+        chassis.AutoMovement(-35, -6, -35);
+
+        chassis.AutoTurn(0);
+
+        timer.reset();
+        while (timer.seconds() < 5) { // Shoot all 3 artifacts
+            cameraDetection.CameraDetectionBlue();
+
+            subsystems.shooter.shoot(range);
+
+            if (timer.seconds() > 2) {
+                subsystems.startCycling();
+            }
+        }
     }
 }
 
