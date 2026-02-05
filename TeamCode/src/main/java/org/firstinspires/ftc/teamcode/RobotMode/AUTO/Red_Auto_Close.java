@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Subsystems;
 import org.firstinspires.ftc.teamcode.RobotMode.Dashboard;
 import org.firstinspires.ftc.teamcode.RobotMode.TelemetryMethods;
 
-@Autonomous(name="Red Auto Close", group="Blue")
+@Autonomous(name="Red Auto Close", group="Red")
 public class Red_Auto_Close extends LinearOpMode {
     ChassisController chassis;
     Subsystems subsystems;
@@ -38,60 +38,61 @@ public class Red_Auto_Close extends LinearOpMode {
         timer = new ElapsedTime();
 
         telemetryMethods.InitTelemetry(telemetry);
-        cameraDetection.CameraDetectionBlue();
+        cameraDetection.CameraDetectionRed();
 
         waitForStart(); // Auto Start
 
+
         telemetryMethods.TelemetryUpdateCamera();
-        Dashboard.initDashboard(ChassisController.getDistanceInchesX(), ChassisController.getDistanceInchesY(), 0, 15);
+        cameraDetection.CameraDetectionRed();
 
-        chassis.AutoTurn(0);
         chassis.AutoMovement(0, -30, 0); // Move back to shoot
+        chassis.AutoTurn(0);
 
-        cameraDetection.CameraDetectionBlue();
-
-//        sleep();
+        //cameraDetection.CameraDetectionBlue();
 
         timer.reset();
-        while (timer.seconds() < 5) { // Shoot all 3 artifacts
-            cameraDetection.CameraDetectionBlue();
+        while (timer.seconds() < 4) { // Shoot all 3 artifacts
+            cameraDetection.CameraDetectionRed();
+            subsystems.shooter.shoot(101);
 
-            subsystems.shooter.shoot(range);
-
-            if (timer.seconds() > 2) {
+            if (timer.seconds() > 1.115 && timer.seconds() <= 4) {
                 subsystems.startCycling();
+            } else {
+                subsystems.stopCycling();
             }
         }
-
-        subsystems.stopAllSubMotors();
-        chassis.AutoTurn(-35); // Turn towards artifacts
-        chassis.AutoMovement(42, 0, -35);
+        chassis.AutoTurn(-42); // Turn towards artifacts
+        chassis.AutoMovement(18.2, 0, -42);
+        chassis.AutoTurn(-42);
         timer.reset();
 
-        timer.reset();
-        while (timer.seconds() < 3) {
+        while (timer.seconds() < 2.2) { // Pick up first artifact row
             subsystems.intake.moveIntake(1);
             subsystems.indexer.moveIndexer(1);
-            subsystems.feeder.moveFeeder(.1);
-            chassis.AutoMovement(0, 36, -35);
+            subsystems.feeder.moveFeeder(.32);
+            chassis.AutoMovementSlow(0, 38, -42);
         }
 
-        subsystems.stopAllSubMotors();
-        chassis.AutoMovement(0, -37, -35);
-        chassis.AutoMovement(-35, -6, -35);
+        subsystems.stopCycling();
+        chassis.AutoMovement(10.5,-8,-42); // Move towards gate
+        chassis.AutoMovement(0,10.9,-42); // Open gate
+        sleep(500);
 
-        chassis.AutoTurn(0);
+        chassis.AutoMovement(-26, -26, -42); // Move back to launch zone
+
+        chassis.AutoTurn(5);
 
         timer.reset();
-        while (timer.seconds() < 5) { // Shoot all 3 artifacts
-            cameraDetection.CameraDetectionBlue();
-
+        while (timer.seconds() < 4.2) { // Shoot all 3 artifacts
+            cameraDetection.CameraDetectionRed();
             subsystems.shooter.shoot(range);
 
-            if (timer.seconds() > 2) {
+            if (timer.seconds() > 1.12 && timer.seconds() <= 4.2) {
                 subsystems.startCycling();
+            } else {
+                subsystems.stopCycling();
             }
         }
     }
 }
-

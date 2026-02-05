@@ -147,7 +147,7 @@ public class ChassisController {
 
         timer.reset();
 
-        while ((Math.abs(errorX) > .5 || Math.abs(errorY) > .5) && timer.seconds() < 2.5) {
+        while ((Math.abs(errorX) > .5 || Math.abs(errorY) > .5) && timer.seconds() < 1) {
             currentDistanceX = getDistanceInchesX();
             currentDistanceY = getDistanceInchesY();
 
@@ -162,10 +162,51 @@ public class ChassisController {
             double turn = pid.calculateAngleChassisPID(desiredAngle, imu.getRobotYawPitchRollAngles().getYaw());
 
 
-            topLeft.setPower((power * cos / max + turn) * .05); //set the power of the motors
-            topRight.setPower((power * sin / max - turn) * .05); //set the power of the motors
-            rearLeft.setPower((power * sin / max + turn) * .05); //set the power of the motors
-            rearRight.setPower((power * cos / max - turn) * .05); //set the power of the motors
+            topLeft.setPower((power * cos / max + turn) * .065); //set the power of the motors
+            topRight.setPower((power * sin / max - turn) * .065); //set the power of the motors
+            rearLeft.setPower((power * sin / max + turn) * .065); //set the power of the motors
+            rearRight.setPower((power * cos / max - turn) * .065); //set the power of the motors
+
+//            Blue_Auto_Close.telemetryMethods.TelemetryUpdateCamera();
+        }
+
+        stopChassis();
+    }
+
+    public void AutoMovementSlow(double setPointX, double setPointY, double desiredAngle) {
+        resetEncoders();
+
+        // Save the robot´s starting position
+
+        initialPositionX = currentDistanceX;
+        initialPositionY = currentDistanceY;
+
+        // Calculate initial error
+
+        errorX = setPointX - currentDistanceX;
+        errorY = setPointY - currentDistanceY;
+
+        timer.reset();
+
+        while ((Math.abs(errorX) > .5 || Math.abs(errorY) > .5) && timer.seconds() < 1) {
+            currentDistanceX = getDistanceInchesX();
+            currentDistanceY = getDistanceInchesY();
+
+            errorX = setPointX - currentDistanceX;
+            errorY = setPointY - currentDistanceY;
+
+            double power = Math.hypot(errorX, errorY);
+            double theta = Math.atan2(errorY, errorX); //create the angle of the robot that we want to move
+            double sin = Math.sin(theta - Math.PI  / 4); //create the sin of the angle
+            double cos = Math.cos(theta - Math.PI / 4); //create the cos of the angle
+            double max = Math.max(Math.abs(sin), Math.abs(cos)); //create the max of the sin and the cos
+            double turn = pid.calculateAngleChassisPID(desiredAngle, imu.getRobotYawPitchRollAngles().getYaw());
+
+
+            topLeft.setPower((power * cos / max + turn) * .0095); //set the power of the motors
+            topRight.setPower((power * sin / max - turn) * .0095); //set the power of the motors
+            rearLeft.setPower((power * sin / max + turn) * .0095); //set the power of the motors
+            rearRight.setPower((power * cos / max - turn) * .0095); //set the power of the motors
 
 //            Blue_Auto_Close.telemetryMethods.TelemetryUpdateCamera();
         }
@@ -224,7 +265,7 @@ public class ChassisController {
 
         timer.reset();
 
-        while (Math.abs(turnError) > .2 && timer.seconds() < 1) {
+        while (Math.abs(turnError) > .2 && timer.seconds() < .5) {
             currentAngle = imu.getRobotYawPitchRollAngles().getYaw();
             turnError = desiredAngle - currentAngle;
 

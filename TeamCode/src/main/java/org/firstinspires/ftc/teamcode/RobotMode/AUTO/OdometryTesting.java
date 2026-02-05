@@ -45,7 +45,8 @@ public class OdometryTesting extends LinearOpMode {
         telemetryMethods.TelemetryUpdateCamera();
         Dashboard.initDashboard(ChassisController.getDistanceInchesX(),ChassisController.getDistanceInchesY(),0,15);
 
-        chassis.AutoMovement(40,0,0);
+        chassis.AutoMovement(0,-10,0);
+        chassis.AutoTurn(-40);
     }
 }
 

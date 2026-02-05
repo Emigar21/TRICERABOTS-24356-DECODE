@@ -13,8 +13,8 @@ import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Subsystems;
 import org.firstinspires.ftc.teamcode.RobotMode.Dashboard;
 import org.firstinspires.ftc.teamcode.RobotMode.TelemetryMethods;
 
-@Autonomous(name="Blue Auto Close", group="Blue")
-public class Blue_Auto_Close extends LinearOpMode {
+@Autonomous(name="Blue Auto Far Away", group="Blue")
+public class Blue_Auto_Far extends LinearOpMode {
     ChassisController chassis;
     Subsystems subsystems;
     Sensors sensors;
@@ -44,15 +44,18 @@ public class Blue_Auto_Close extends LinearOpMode {
         telemetryMethods.TelemetryUpdateCamera();
         cameraDetection.CameraDetectionBlue();
 
-        chassis.AutoMovement(0, -30, 0); // Move back to shoot
-        chassis.AutoTurn(0);
+        waitForStart();
 
+        telemetryMethods.TelemetryUpdateCamera();
         cameraDetection.CameraDetectionBlue();
+
+        chassis.AutoMovement(7,7,0);
+        chassis.AutoTurn(25);
 
         timer.reset();
         while (timer.seconds() < 4) { // Shoot all 3 artifacts
             cameraDetection.CameraDetectionBlue();
-            subsystems.shooter.shoot(99.7);
+            subsystems.shooter.shoot(255);
 
             if (timer.seconds() > 1.115 && timer.seconds() <= 4) {
                 subsystems.startCycling();
@@ -60,39 +63,39 @@ public class Blue_Auto_Close extends LinearOpMode {
                 subsystems.stopCycling();
             }
         }
-        chassis.AutoTurn(35); // Turn towards artifacts
-        chassis.AutoMovement(-17.6, 0, 35);
-        chassis.AutoTurn(35);
+
+        chassis.AutoTurn(90);
+        chassis.AutoMovement(21,14,90);
+        chassis.AutoTurn(90);
+
         timer.reset();
 
         while (timer.seconds() < 2.2) { // Pick up first artifact row
             subsystems.intake.moveIntake(1);
             subsystems.indexer.moveIndexer(1);
             subsystems.feeder.moveFeeder(.32);
-            chassis.AutoMovementSlow(0, 38, 35);
+            chassis.AutoMovementSlow(0, 32, 35);
         }
 
-        subsystems.stopCycling();
-        chassis.AutoMovement(-10.5,-8,35); // Move towards gate
-        chassis.AutoMovement(0,10.9,35); // Open gate
-        sleep(500);
-
-        chassis.AutoMovement(20, -20, 35); // Move back to launch zone
-        chassis.AutoMovement(10, -10, 35); // Move back to launch zone
-
-        chassis.AutoTurn(-2);
+        chassis.AutoMovement(-15,-30,90);
+        chassis.AutoMovement(0,-16,90);
+        chassis.AutoTurn(20);
 
         timer.reset();
-        while (timer.seconds() < 4.2) { // Shoot all 3 artifacts
+        while (timer.seconds() < 4) { // Shoot all 3 artifacts
             cameraDetection.CameraDetectionBlue();
-            subsystems.shooter.shoot(range);
+            subsystems.shooter.shoot(250);
 
-            if (timer.seconds() > 1.12 && timer.seconds() <= 4.2) {
+            if (timer.seconds() > 1.115 && timer.seconds() <= 4) {
                 subsystems.startCycling();
             } else {
                 subsystems.stopCycling();
             }
         }
+
+        chassis.AutoTurn(90);
+        chassis.AutoMovement(17,15,90);
+        chassis.AutoTurn(90);
+        chassis.AutoMovement(0,2,90);
     }
 }
-
