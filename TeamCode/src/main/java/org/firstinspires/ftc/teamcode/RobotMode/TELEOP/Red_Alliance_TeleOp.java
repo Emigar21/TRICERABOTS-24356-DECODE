@@ -124,9 +124,9 @@ public class Red_Alliance_TeleOp extends OpMode {
                 subsystems.shooter.shoot(range);
             } else {
                 subsystems.shooter.shoot(range);
-                subsystems.intake.moveIntake(Shooter.getActualVel() >= (Shooter.controlPoints.get(range) - 400) ? 1 : 0);
-                subsystems.indexer.moveIndexer(Shooter.getActualVel() >= (Shooter.controlPoints.get(range) - 400) ? 1 : 0);
-                subsystems.feeder.moveFeeder(Shooter.getActualVel() >= (Shooter.controlPoints.get(range) - 400) ? 1 : 0);
+                subsystems.intake.moveIntake(Shooter.getActualVel() >= (Shooter.controlPoints.get(range) - 700) ? 1 : 0);
+                subsystems.indexer.moveIndexer(Shooter.getActualVel() >= (Shooter.controlPoints.get(range) - 700) ? 1 : 0);
+                subsystems.feeder.moveFeeder(Shooter.getActualVel() >= (Shooter.controlPoints.get(range) - 700) ? 1 : 0);
             }
         } else {
             autoMode = false;

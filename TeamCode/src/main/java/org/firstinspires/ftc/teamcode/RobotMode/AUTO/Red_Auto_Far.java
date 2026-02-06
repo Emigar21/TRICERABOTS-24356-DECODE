@@ -13,8 +13,8 @@ import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Subsystems;
 import org.firstinspires.ftc.teamcode.RobotMode.Dashboard;
 import org.firstinspires.ftc.teamcode.RobotMode.TelemetryMethods;
 
-@Autonomous(name="Blue Auto Far Away", group="Blue")
-public class Blue_Auto_Far extends LinearOpMode {
+@Autonomous(name="Red Auto Far Away", group="Red")
+public class Red_Auto_Far extends LinearOpMode {
     ChassisController chassis;
     Subsystems subsystems;
     Sensors sensors;
@@ -49,8 +49,8 @@ public class Blue_Auto_Far extends LinearOpMode {
         telemetryMethods.TelemetryUpdateCamera();
         cameraDetection.CameraDetectionBlue();
 
-        chassis.AutoMovement(7,7,0);
-        chassis.AutoTurn(25);
+        chassis.AutoMovement(-7,7,0);
+        chassis.AutoTurn(-25);
 
         timer.reset();
         while (timer.seconds() < 4) { // Shoot all 3 artifacts
@@ -64,9 +64,9 @@ public class Blue_Auto_Far extends LinearOpMode {
             }
         }
 
-        chassis.AutoTurn(90);
-        chassis.AutoMovement(21,14,90);
-        chassis.AutoTurn(90);
+        chassis.AutoTurn(-90);
+        chassis.AutoMovement(21,14,-90);
+        chassis.AutoTurn(-90);
 
         timer.reset();
 
@@ -74,11 +74,11 @@ public class Blue_Auto_Far extends LinearOpMode {
             subsystems.intake.moveIntake(1);
             subsystems.indexer.moveIndexer(1);
             subsystems.feeder.moveFeeder(.32);
-            chassis.AutoMovementSlow(0, 32, 90);
+            chassis.AutoMovementSlow(0, 32, -90);
         }
 
-        chassis.AutoMovement(-15,-30,90);
-        chassis.AutoMovement(0,-16,90);
+        chassis.AutoMovement(-15,-30,-90);
+        chassis.AutoMovement(0,-16,-90);
         chassis.AutoTurn(20);
 
         timer.reset();
@@ -93,9 +93,9 @@ public class Blue_Auto_Far extends LinearOpMode {
             }
         }
 
-        chassis.AutoTurn(90);
-        chassis.AutoMovement(17,15,90);
-        chassis.AutoTurn(90);
-        chassis.AutoMovement(0,2,90);
+        chassis.AutoTurn(-90);
+        chassis.AutoMovement(17,15,-90);
+        chassis.AutoTurn(-90);
+        chassis.AutoMovement(0,2,-90);
     }
 }

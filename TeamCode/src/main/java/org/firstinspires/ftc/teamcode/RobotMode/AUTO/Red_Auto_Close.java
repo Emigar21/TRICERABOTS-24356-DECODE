@@ -52,11 +52,11 @@ public class Red_Auto_Close extends LinearOpMode {
         //cameraDetection.CameraDetectionBlue();
 
         timer.reset();
-        while (timer.seconds() < 4) { // Shoot all 3 artifacts
+        while (timer.seconds() < 3.9) { // Shoot all 3 artifacts
             cameraDetection.CameraDetectionRed();
             subsystems.shooter.shoot(101);
 
-            if (timer.seconds() > 1.115 && timer.seconds() <= 4) {
+            if (timer.seconds() > 1.115 && timer.seconds() <= 3.9) {
                 subsystems.startCycling();
             } else {
                 subsystems.stopCycling();
@@ -67,21 +67,51 @@ public class Red_Auto_Close extends LinearOpMode {
         chassis.AutoTurn(-42);
         timer.reset();
 
-        while (timer.seconds() < 2.2) { // Pick up first artifact row
+        while (timer.seconds() < 2.1) { // Pick up first artifact row
+            subsystems.intake.moveIntake(1);
+            subsystems.indexer.moveIndexer(1);
+            subsystems.feeder.moveFeeder(.32);
+            chassis.AutoMovementSlow(0, 38.5, -42);
+        }
+
+        subsystems.stopAllSubMotors();
+        chassis.AutoMovement(10.5,-8,-42); // Move towards gate
+        chassis.AutoMovement(0,10.9,-42); // Open gate
+        sleep(500);
+
+        chassis.AutoMovement(-20, -20, -42); // Move back to launch zone
+        chassis.AutoMovement(-10,-10,-42);
+
+        chassis.AutoTurn(5);
+
+        timer.reset();
+        while (timer.seconds() < 4.2) { // Shoot all 3 artifacts
+            cameraDetection.CameraDetectionRed();
+            subsystems.shooter.shoot(range);
+
+            if (timer.seconds() > 1.12 && timer.seconds() <= 4.2) {
+                subsystems.startCycling();
+            } else {
+                subsystems.stopCycling();
+            }
+        }
+
+        chassis.AutoTurn(-42);
+        chassis.AutoMovement(25,-6,-42); // Move diagonal towards artifacts
+        chassis.AutoMovement(20,0,-42); // Move right towards artifacts
+        chassis.AutoTurn(-42);
+
+        timer.reset();
+        while (timer.seconds() < 2.2) { // Pick up second artifact row
             subsystems.intake.moveIntake(1);
             subsystems.indexer.moveIndexer(1);
             subsystems.feeder.moveFeeder(.32);
             chassis.AutoMovementSlow(0, 38, -42);
         }
 
-        subsystems.stopCycling();
-        chassis.AutoMovement(10.5,-8,-42); // Move towards gate
-        chassis.AutoMovement(0,10.9,-42); // Open gate
-        sleep(500);
-
-        chassis.AutoMovement(-26, -26, -42); // Move back to launch zone
-
-        chassis.AutoTurn(5);
+        chassis.AutoMovement(-25,-30,-42);
+        chassis.AutoMovement(-20,-20,-42);
+        chassis.AutoTurn(0);
 
         timer.reset();
         while (timer.seconds() < 4.2) { // Shoot all 3 artifacts
