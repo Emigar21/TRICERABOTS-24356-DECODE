@@ -203,7 +203,7 @@ public class ChassisController {
             double turn = pid.calculateAngleChassisPID(desiredAngle, imu.getRobotYawPitchRollAngles().getYaw());
 
 
-            topLeft.setPower((power * cos / max + turn) * .0095); //set the power of the motors
+            topLeft.setPower((power * cos / max + turn) * .0095  ); //set the power of the motors
             topRight.setPower((power * sin / max - turn) * .0095); //set the power of the motors
             rearLeft.setPower((power * sin / max + turn) * .0095); //set the power of the motors
             rearRight.setPower((power * cos / max - turn) * .0095); //set the power of the motors

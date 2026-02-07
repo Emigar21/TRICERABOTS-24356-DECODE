@@ -66,7 +66,7 @@ public class Shooter {
     public void createControlPoints() {
         controlPoints.add(Constants.shooterConst.MIN_DISTANCE,3400);
         controlPoints.add(116,3690);
-        controlPoints.add(161,4120);
+        controlPoints.add(161,4200);
         controlPoints.add(197,4450);
         controlPoints.add(215,4910);
         controlPoints.add(267,5150);

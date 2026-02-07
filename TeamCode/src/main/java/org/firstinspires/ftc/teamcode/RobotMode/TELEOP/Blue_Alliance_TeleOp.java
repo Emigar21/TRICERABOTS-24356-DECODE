@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.RobotMode.Dashboard;
 import org.firstinspires.ftc.teamcode.RobotFunctions.Chassis.ChassisController;
 
 import org.firstinspires.ftc.teamcode.RobotMode.TelemetryMethods;
+import org.firstinspires.ftc.teamcode.Variables.Constants;
 
 @TeleOp(name="Blue TeleOp",group="Blue")
 public class Blue_Alliance_TeleOp extends OpMode {
@@ -119,18 +120,17 @@ public class Blue_Alliance_TeleOp extends OpMode {
 
         if (RT2 != 0) {
             autoMode = true;
-            subsystems.shooter.shoot(range);
-            subsystems.intake.moveIntake(Shooter.getActualVel() >= (Shooter.controlPoints.get(range) - 700) ? 1 : 0);
-            subsystems.indexer.moveIndexer(Shooter.getActualVel() >= (Shooter.controlPoints.get(range) - 700) ? 1 : 0);
-            subsystems.feeder.moveFeeder(Shooter.getActualVel() >= (Shooter.controlPoints.get(range) - 700) ? 1 : 0);
+
+            if(range < Constants.shooterConst.MIN_DISTANCE || range > Constants.shooterConst.MAX_DISTANCE){
+                subsystems.shooter.shoot(range);
+            } else {
+                subsystems.shooter.shoot(range);
+                subsystems.intake.moveIntake(Shooter.getActualVel() >= (Shooter.controlPoints.get(range) - 650) ? 1 : 0);
+                subsystems.indexer.moveIndexer(Shooter.getActualVel() >= (Shooter.controlPoints.get(range) - 650) ? 1 : 0);
+                subsystems.feeder.moveFeeder(Shooter.getActualVel() >= (Shooter.controlPoints.get(range) - 650) ? 1 : 0);
+            }
         } else {
             autoMode = false;
-            subsystems.shooter.stopShooter();
-        }
-
-        if (LT2 != 0) {
-            subsystems.shooter.configShooter();
-        } else {
             subsystems.shooter.stopShooter();
         }
 

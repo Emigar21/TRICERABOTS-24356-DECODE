@@ -52,7 +52,7 @@ public class Blue_Auto_Close extends LinearOpMode {
         timer.reset();
         while (timer.seconds() < 3.9) { // Shoot all 3 artifacts
             cameraDetection.CameraDetectionBlue();
-            subsystems.shooter.shoot(99.7);
+            subsystems.shooter.shoot(105);
 
             if (timer.seconds() > 1.115 && timer.seconds() <= 3.9) {
                 subsystems.startCycling();
@@ -69,7 +69,10 @@ public class Blue_Auto_Close extends LinearOpMode {
             subsystems.intake.moveIntake(1);
             subsystems.indexer.moveIndexer(1);
             subsystems.feeder.moveFeeder(.32);
-            chassis.AutoMovementSlow(0, 37, 35);
+            chassis.AutoMovementSlow(0, 25, 35);
+            chassis.AutoMovementSlow(0, 15, 35);
+
+
         }
 
         subsystems.stopCycling();
@@ -95,7 +98,6 @@ public class Blue_Auto_Close extends LinearOpMode {
 
         chassis.AutoTurn(35);
         chassis.AutoMovement(-25,-5,35);
-        chassis.AutoMovement(-22,0,35);
         chassis.AutoTurn(35);
 
         timer.reset();
@@ -106,6 +108,7 @@ public class Blue_Auto_Close extends LinearOpMode {
             chassis.AutoMovementSlow(0, 36, 35);
         }
 
+        chassis.AutoMovement(0,-10,35);
         chassis.AutoMovement(25,-25,35);
         chassis.AutoMovement(20,-20,35);
         chassis.AutoTurn(0);

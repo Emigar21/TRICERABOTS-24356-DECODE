@@ -54,7 +54,7 @@ public class Red_Auto_Close extends LinearOpMode {
         timer.reset();
         while (timer.seconds() < 3.9) { // Shoot all 3 artifacts
             cameraDetection.CameraDetectionRed();
-            subsystems.shooter.shoot(101);
+            subsystems.shooter.shoot(106);
 
             if (timer.seconds() > 1.115 && timer.seconds() <= 3.9) {
                 subsystems.startCycling();
@@ -71,7 +71,9 @@ public class Red_Auto_Close extends LinearOpMode {
             subsystems.intake.moveIntake(1);
             subsystems.indexer.moveIndexer(1);
             subsystems.feeder.moveFeeder(.32);
-            chassis.AutoMovementSlow(0, 38.5, -42);
+            chassis.AutoMovement(0,10,-42);
+            chassis.AutoMovementSlow(0, 20, -42);
+            chassis.AutoMovementSlow(0,10,-42);
         }
 
         subsystems.stopAllSubMotors();
@@ -109,7 +111,8 @@ public class Red_Auto_Close extends LinearOpMode {
             chassis.AutoMovementSlow(0, 38, -42);
         }
 
-        chassis.AutoMovement(-25,-30,-42);
+        chassis.AutoMovement(0,-10,-42);
+        chassis.AutoMovement(-25,-25,-42);
         chassis.AutoMovement(-20,-20,-42);
         chassis.AutoTurn(0);
 
