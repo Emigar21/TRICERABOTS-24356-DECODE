@@ -13,8 +13,8 @@ import org.firstinspires.ftc.teamcode.RobotFunctions.Subsystems.Subsystems;
 import org.firstinspires.ftc.teamcode.RobotMode.Dashboard;
 import org.firstinspires.ftc.teamcode.RobotMode.TelemetryMethods;
 
-@Autonomous(name="Red Auto Far Away", group="Red")
-public class Red_Auto_Far extends LinearOpMode {
+@Autonomous(name="Red Auto Far & Leave", group="Red")
+public class Red_Auto_Far_Leave extends LinearOpMode {
     ChassisController chassis;
     Subsystems subsystems;
     Sensors sensors;
@@ -49,52 +49,23 @@ public class Red_Auto_Far extends LinearOpMode {
         telemetryMethods.TelemetryUpdateCamera();
         cameraDetection.CameraDetectionRed();
 
-        chassis.AutoMovement(-7,7,0);
-        chassis.AutoTurn(-23);
-
-        timer.reset();
-        while (timer.seconds() < 7) { // Shoot all 3 artifacts
-            cameraDetection.CameraDetectionRed();
-            subsystems.shooter.shoot(290);
-
-            if (timer.seconds() > 2 && timer.seconds() <= 4) {
-                subsystems.startCycling();
-            } else {
-                subsystems.stopCycling();
-            }
-        }
-
-        chassis.AutoTurn(-90);
-        chassis.AutoMovement(-21,12,-90);
-        chassis.AutoTurn(-90);
-
-        timer.reset();
-
-        while (timer.seconds() < 2.2) { // Pick up first artifact row
-            subsystems.intake.moveIntake(1);
-            subsystems.indexer.moveIndexer(1);
-            subsystems.feeder.moveFeeder(.28);
-            chassis.AutoMovementSlow(0, 29, -90);
-        }
-
-        chassis.AutoMovement(15,-30,-90);
-        chassis.AutoTurn(-90);
-        chassis.AutoMovement(0,-10,-90);
+        chassis.AutoMovement(-8,8,0);
         chassis.AutoTurn(-24);
 
         timer.reset();
-        while (timer.seconds() < 7) { // Shoot all 3 artifacts
+        while (timer.seconds() < 4) { // Shoot all 3 artifacts
             cameraDetection.CameraDetectionRed();
-            subsystems.shooter.shoot(305);
+            subsystems.shooter.shoot(319);
 
-            if (timer.seconds() > 2 && timer.seconds() <= 4) {
+            if (timer.seconds() > 1.2 && timer.seconds() <= 4) {
                 subsystems.startCycling();
             } else {
                 subsystems.stopCycling();
             }
         }
 
-        chassis.AutoTurn(-90);
-        chassis.AutoMovement(0,15,-90);
-    }
+        chassis.AutoTurn(0);
+        chassis.AutoMovement(15,0,0);
+
+        }
 }

@@ -55,9 +55,9 @@ public class Blue_Auto_Far extends LinearOpMode {
         timer.reset();
         while (timer.seconds() < 4) { // Shoot all 3 artifacts
             cameraDetection.CameraDetectionBlue();
-            subsystems.shooter.shoot(255);
+            subsystems.shooter.shoot(290);
 
-            if (timer.seconds() > 1.115 && timer.seconds() <= 4) {
+            if (timer.seconds() > 2 && timer.seconds() <= 4) {
                 subsystems.startCycling();
             } else {
                 subsystems.stopCycling();
@@ -73,20 +73,21 @@ public class Blue_Auto_Far extends LinearOpMode {
         while (timer.seconds() < 2.2) { // Pick up first artifact row
             subsystems.intake.moveIntake(1);
             subsystems.indexer.moveIndexer(1);
-            subsystems.feeder.moveFeeder(.32);
-            chassis.AutoMovementSlow(0, 32, 90);
+            subsystems.feeder.moveFeeder(.28);
+            chassis.AutoMovementSlow(0, 29, 90);
         }
 
         chassis.AutoMovement(-15,-30,90);
-        chassis.AutoMovement(0,-16,90);
+        chassis.AutoTurn(90);
+        chassis.AutoMovement(0,-10,90);
         chassis.AutoTurn(20);
 
         timer.reset();
         while (timer.seconds() < 4) { // Shoot all 3 artifacts
             cameraDetection.CameraDetectionBlue();
-            subsystems.shooter.shoot(250);
+            subsystems.shooter.shoot(305);
 
-            if (timer.seconds() > 1.115 && timer.seconds() <= 4) {
+            if (timer.seconds() > 2 && timer.seconds() <= 4) {
                 subsystems.startCycling();
             } else {
                 subsystems.stopCycling();
@@ -94,8 +95,6 @@ public class Blue_Auto_Far extends LinearOpMode {
         }
 
         chassis.AutoTurn(90);
-        chassis.AutoMovement(17,15,90);
-        chassis.AutoTurn(90);
-        chassis.AutoMovement(0,2,90);
+        chassis.AutoMovement(0,15,90);
     }
 }
